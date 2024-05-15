@@ -1,5 +1,31 @@
-# Sistema de Chat en Línea en PHP y MySQL
-<img src="https://i0.wp.com/www.configuroweb.com/wp-content/uploads/2022/05/Sistema-de-Chat-en-Linea-en-PHP-y-MySQL.png?resize=800%2C500&ssl=1">
-Este Sistema de Chat en Línea en PHP y MySQL con Código Fuente le permite al usuario registrarse y comunicarse con los usuarios que están conectados, la gran diferencia entre los chats anteriores es que este cambia en tiempo real, gracias a la tecnología de Ajax, solo recarga el div donde se encuentra el chat especifico y esto que la conversación por el chat sea más fluida.
+# Proyecto de Chat con PHP
 
-Más información en el siguiente enlace: <a href="https://www.configuroweb.com/sistema-de-chat-en-linea-en-php-y-mysql/">Sistema de Chat en Línea en PHP y MySQL</a>
+![Chat con PHP](chat_php.jpg)
+
+Bienvenido al proyecto de chat desarrollado en PHP. Esta aplicación permite a los usuarios registrarse, iniciar sesión, enviar mensajes, recibir notificaciones push a través de Firebase Cloud Messaging (FCM), gestionar administradores (si el usuario es un super administrador), editar su perfil, adjuntar archivos y enviar enlaces para videollamadas, entre otras funcionalidades.
+
+## Características Principales
+
+- **Registro y Inicio de Sesión**: Los usuarios pueden registrarse e iniciar sesión de forma segura.
+- **Responsive Design**: La aplicación es compatible con dispositivos móviles y se adapta a diferentes tamaños de pantalla para proporcionar una experiencia de usuario óptima.
+- **Envío de Mensajes**: Los usuarios pueden comunicarse entre sí mediante el envío de mensajes.
+- **Notificaciones Push**: Se utilizan las notificaciones push de Firebase para enviar alertas en tiempo real a los dispositivos de los usuarios.
+- **Gestión de Administradores**: Los super administradores tienen el poder de gestionar los roles de los usuarios en el sistema.
+- **Adjuntar Archivos y Enviar Enlaces**: Los usuarios pueden compartir archivos y enlaces a videollamadas.
+
+## Capturas de Pantalla
+
+A continuación, algunas capturas de pantalla de la aplicación:
+
+![Inicio de Sesión](login.PNG)
+
+![Registro de Usuarios](register.PNG)
+
+## Requisitos del Sistema
+
+- PHP 8.x
+- MySQL
+- Servidor web (por ejemplo, Apache o Nginx)
+- Firebase Cloud Messaging (FCM) para notificaciones push
+
+¡Disfruta de tu experiencia de chat con PHP!
