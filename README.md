@@ -26,11 +26,11 @@ Para configurar las notificaciones push a través de Firebase Cloud Messaging (F
 
 ### Configuración de la Base de Datos
 
-La aplicación utiliza MySQL como base de datos. Asegúrate de configurar la conexión a la base de datos en el archivo de configuración adecuado (`config.php`).
+La aplicación utiliza MySQL como base de datos. Asegúrate de configurar la conexión a la base de datos en el archivo de configuración adecuado (`php/config.php`).
 
 ### Configuración del Correo Electrónico
 
-Para enviar correos electrónicos de verificación de cuentas, restablecimiento de contraseñas u otras notificaciones por correo electrónico, configura los parámetros de correo electrónico en la aplicación.
+Para enviar correos electrónicos de verificación de cuentas, restablecimiento de contraseñas u otras notificaciones por correo electrónico, configura los parámetros de correo electrónico en la aplicación.(`php/send-email.php`).
 ## Capturas de Pantalla
 
 A continuación, algunas capturas de pantalla de la aplicación:
