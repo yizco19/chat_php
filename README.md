@@ -22,7 +22,7 @@ Para configurar las notificaciones push a través de Firebase Cloud Messaging (F
 1. Crea un proyecto en [Firebase Console](https://console.firebase.google.com/).
 2. Obtén las credenciales de Firebase (Firebase Web SDK) y configúralas en tu aplicación PHP.
 3. Configura la base de datos en tiempo real de Firebase para enviar notificaciones a los dispositivos de los usuarios.
-4. Modifica el firebaseConfig para obtener el token (javascript/message.js) y la ruta para hacer la petición de envío de notificaciones push (php/send-push).
+4. Modifica el firebaseConfig para obtener el token (`javascript/message.js`) y la ruta para hacer la petición de envío de notificaciones push (`php/send-push`).
 
 ### Configuración de la Base de Datos
 
