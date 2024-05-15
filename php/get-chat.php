@@ -8,52 +8,75 @@ if (isset($_SESSION['unique_id'])) {
     
     // Obtener el ID de usuario entrante del formulario
     $incoming_id = mysqli_real_escape_string($conn, $_POST['incoming_id']);
-
-    // Consulta SQL para contar el número de mensajes no leídos
-    $sql = "SELECT COUNT(*) AS unread_count 
-            FROM messages 
-            WHERE (incoming_msg_id = {$outgoing_id} AND outgoing_msg_id = {$incoming_id} and is_seen = 0)
-            OR (incoming_msg_id = {$incoming_id} AND outgoing_msg_id = {$outgoing_id} AND is_sender = 0)";
-    $result = mysqli_query($conn, $sql);
-    //echo $sql;
     $first = $_SESSION["first_login"];
     if ($first) {
         displayMessage($outgoing_id, $incoming_id, $conn);
-        $_SESSION["first_login"] = false;
+        
     }
-    // Manejo de errores
-    if ($result) {
-        $row = mysqli_fetch_assoc($result);
-        $unread_count = $row['unread_count'];
+    // Obtener los mensajes no leídos para el usuario saliente
+    $sql_seen = "SELECT COUNT(*) AS unread_count 
+                FROM messages 
+                WHERE incoming_msg_id = {$outgoing_id} 
+                AND outgoing_msg_id = {$incoming_id} 
+                AND is_seen = 0";
+    $msg_seen = mysqli_query($conn, $sql_seen);
+
+    // Obtener los mensajes no enviados para el usuario entrante
+    $sql_sender = "SELECT COUNT(*) AS unread_count 
+                FROM messages 
+                WHERE incoming_msg_id = {$incoming_id} 
+                AND outgoing_msg_id = {$outgoing_id} 
+                AND is_sender = 0";
+    $msg_sender = mysqli_query($conn, $sql_sender);
+
+    // Manejo de errores y actualización de mensajes
+    if ($msg_seen && $msg_sender) { // Cambiado de || a &&
+		
+        $row_seen = mysqli_fetch_assoc($msg_seen);
+        $row_sender = mysqli_fetch_assoc($msg_sender);
+        $unread_count_seen = $row_seen['unread_count'];
+        $unread_count_sender = $row_sender['unread_count'];
+       
         // Actualizar mensajes no leídos solo si hay alguno
-        if ($unread_count > 0) {
+        if ($unread_count_seen > 0) {
             $sql_update_seen = "UPDATE messages 
                                 SET is_seen = 1, seen_at = NOW() 
                                 WHERE incoming_msg_id = {$outgoing_id} 
                                 AND outgoing_msg_id = {$incoming_id} 
                                 AND is_seen = 0";
+            mysqli_query($conn, $sql_update_seen);
+        }
+
+        // Actualizar mensajes no enviados solo si hay alguno
+        if ($unread_count_sender > 0) {
             $sql_update_sender = "UPDATE messages
                                 SET is_sender = 1
                                 WHERE incoming_msg_id = {$incoming_id}
                                 AND outgoing_msg_id = {$outgoing_id}
                                 AND is_sender = 0";
-            mysqli_query($conn, $sql_update_sender);   
-            mysqli_query($conn, $sql_update_seen);
-            $first= $_SESSION["first_login"];
-                    // Mostrar mensajes después de actualizar los mensajes no leídos
-                    displayMessage($outgoing_id, $incoming_id, $conn);
+            mysqli_query($conn, $sql_update_sender);
+			
         }
-        
+
+        // Mostrar mensajes después de actualizar los mensajes no leídos
+        if($unread_count_seen > 0 || $unread_count_sender > 0) {
+            if( $first) {
+                
+                $_SESSION["first_login"] = false;
+            }else{
+                displayMessage($outgoing_id, $incoming_id, $conn);
+            }
+            
+        }
 
     } else {
         // Manejo de errores
-        echo "Error al contar mensajes no leídos: " . mysqli_error($conn);
+        echo "Error al obtener mensajes: " . mysqli_error($conn);
     }
 } else {
     // Redirigir al usuario si no ha iniciado sesión
     header("location: ../login.php");
 }
-
 
 function displayMessage($outgoing_id, $incoming_id,$conn) {
     $output = "";

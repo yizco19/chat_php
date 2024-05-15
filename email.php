@@ -1,37 +1,43 @@
 <?php
-//Import PHPMailer classes into the global namespace
-//These must be at the top of your script, not inside a function
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+// Varios destinatarios
+$para  = 'aidan@example.com' . ', '; // atención a la coma
+$para .= 'wez@example.com';
 
+// título
+$título = 'Recordatorio de cumpleaños para Agosto';
 
-//Load Composer's autoloader
-require 'vendor/autoload.php';
+// mensaje
+$mensaje = '
+<html>
+<head>
+  <title>Recordatorio de cumpleaños para Agosto</title>
+</head>
+<body>
+  <p>¡Estos son los cumpleaños para Agosto!</p>
+  <table>
+    <tr>
+      <th>Quien</th><th>Día</th><th>Mes</th><th>Año</th>
+    </tr>
+    <tr>
+      <td>Joe</td><td>3</td><td>Agosto</td><td>1970</td>
+    </tr>
+    <tr>
+      <td>Sally</td><td>17</td><td>Agosto</td><td>1973</td>
+    </tr>
+  </table>
+</body>
+</html>
+';
 
-//Create an instance; passing `true` enables exceptions
-$mail = new PHPMailer(true);
+// Para enviar un correo HTML, debe establecerse la cabecera Content-type
+$cabeceras  = 'MIME-Version: 1.0' . "\r\n";
+$cabeceras .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
-try {
-    //Server settings
-    $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-    $mail->isSMTP();                                            //Send using SMTP
-    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = 'zhiyang520679@gmail.com';                     //SMTP username
-    $mail->Password   = 'ydisjjcsynxemusr';                               //SMTP password
-    $mail->SMTPSecure = 'ssl';            //Enable implicit TLS encryption
-    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+// Cabeceras adicionales
+$cabeceras .= 'To: Mary silexi7785@funvane.com, Kelly silexi7785@funvane.com' . "\r\n";
+$cabeceras .= 'From: Recordatorio <cumples@example.com>' . "\r\n";
+$cabeceras .= 'Cc: birthdayarchive@example.com' . "\r\n";
+$cabeceras .= 'Bcc: birthdaycheck@example.com' . "\r\n";
 
-    //Recipients
-    $mail->setFrom('zhiyang520679@gmail.com');
-    $mail->addAddress('kopiyel519@buzblox.com');     //Add a recipient
-    $mail->isHTML(true);                                  //Set email format to HTML
-    $mail->Subject = 'Here is the subject';
-    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-
-    $mail->send();
-    echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-}
+// Enviarlo
+mail($para, $título, $mensaje, $cabeceras);

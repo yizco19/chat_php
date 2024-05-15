@@ -19,8 +19,8 @@ if (mysqli_num_rows($query) > 0) {
     $row = mysqli_fetch_assoc($query);
     $admin = $row['admin'];
     $email = $row['email'];
+    echo $email;
     if ($admin == 1) {
-        sleep(10);
         //comprueba si hay mensaje no visto
         $sql2 = "SELECT * FROM messages WHERE incoming_msg_id = {$incoming_id} AND outgoing_msg_id = {$outgoing_id} AND is_seen = 0";
         echo $sql2;

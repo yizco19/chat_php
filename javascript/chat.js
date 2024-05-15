@@ -7,6 +7,8 @@ const form = document.querySelector(".typing-area"),
 const previewImage = document.getElementById('file-preview');
 const openImageBtn = document.querySelector('.open-image');
 const videoLlamadaBtn = document.querySelector('.videollamadaBtn');
+
+
 form.onsubmit = (e) => {
   e.preventDefault();
 }
@@ -17,6 +19,10 @@ inputField.onkeyup = () => {
     sendBtn.classList.add("active");
   } else {
     sendBtn.classList.remove("active");
+    //si ha selecionado un file tambien se active
+    if(adjuntarBtn.style.display == 'inline'){
+      sendBtn.classList.add("active");
+    }
   }
 }
 
@@ -28,12 +34,19 @@ sendBtn.onclick = () => {
     xhr.onload = () => {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
-          console.log(xhr.responseText);
+          console.log( "response"+xhr.responseText);
           getMessages();
           inputField.value = "";
           scrollToBottom();
           cancelarArchivo();
-          //sendEmail();
+          /*sendEmail()
+          .then((response) => {
+            console.log("La solicitud fue exitosa. Respuesta:", response);
+          })
+          .catch((error) => {
+            console.error("La solicitud falló con el siguiente error:", error);
+          });*/
+        
         }
       }
     }
@@ -56,6 +69,7 @@ async function sendEmail() {
     };
     xhr.onerror = () => {
       reject("Error de red");
+      console.log("Error de red");
     };
     let formData = new FormData(form);
     xhr.send(formData);
@@ -83,9 +97,6 @@ function getMessages() {
         let data = xhr.response;
         if(data!=""){
           chatBox.innerHTML = data;
-        }
-
-        if (!chatBox.classList.contains("active")) {
           scrollToBottom();
         }
       }
@@ -119,12 +130,14 @@ function showFileName() {
       const fileReader = new FileReader();
       fileReader.onload = event => {
         preview.setAttribute('src', event.target.result);
+        preview.setAttribute('alt', input.files[0].name);
         preview.style.display = 'block';
       }
       fileReader.readAsDataURL(input.files[0]);
     } else {
       // Si no es una imagen, mostrar una imagen predeterminada
       preview.setAttribute('src', 'php/images/default.png');
+      preview.setAttribute('alt', 'Imagen predeterminada');
     }
 
     fileName.textContent = input.files[0].name;
@@ -144,11 +157,15 @@ function showFileName() {
 function cancelarArchivo() {
   var input = document.getElementById('attachment');
   var fileInfo = document.getElementById('file-info');
+  var fileName = document.getElementById('file-name');
   input.value = ''; // Limpiar la selección del archivo
   fileInfo.style.display = 'none'; // Ocultar el contenedor del nombre del archivo
   sendBtn.classList.remove("active");
   adjuntarBtn.style.display = 'inline';
   previewImage.style.display = 'none';
+  fileName.textContent = '';
+
+
 }
 
 // Ejecutar la función showFileName cuando se cambie el archivo seleccionado
@@ -167,8 +184,18 @@ document.getElementById('profile-image').addEventListener('click', function () {
 showImageMessage();
 
 videoLlamadaBtn.addEventListener('click', function () {
-
-  var codigoUsuario = "usuario123";
+  var codigoUsuario = "1234567890";
+  getDetailUser()
+    .then(userData => {
+      // Obtener el nombre y apellido actual del usuario
+      var nombreActual = userData.fname;
+      var apellidoActual = userData.lname;
+      console.log("Nombre actual:", nombreActual);
+      console.log("Apellido actual:", apellidoActual);
+      codigoUsuario = nombreActual + apellidoActual;
+      console.log("Codigo de Usuario actualizado:", codigoUsuario);
+    
+    console.log("Codigo de Usuario fuera actualizado:", codigoUsuario);
 
   var fechaHoraActual = new Date();
 
@@ -177,17 +204,19 @@ videoLlamadaBtn.addEventListener('click', function () {
   var dia = fechaHoraActual.getDate();
   var horas = fechaHoraActual.getHours();
   var minutos = fechaHoraActual.getMinutes();
+  var segundos = fechaHoraActual.getSeconds();
 
   mes = mes < 10 ? "0" + mes : mes;
   dia = dia < 10 ? "0" + dia : dia;
   horas = horas < 10 ? "0" + horas : horas;
   minutos = minutos < 10 ? "0" + minutos : minutos;
+  segundos = segundos < 10 ? "0" + segundos : segundos;
 
-  var fechaHoraFormateada = "" + anio + mes + dia + horas + minutos;
+  var fechaHoraFormateada = "" + anio + mes + dia + horas + minutos + segundos;
 
   var enlaceVideollamada = "https://meet.jit.si/" + codigoUsuario + fechaHoraFormateada;
   Swal.fire({
-    title: enlaceVideollamada,
+    title: "Enlace de videollamada",
     imageHeight: '300px',
     imageWidth: 'auto',
     showCancelButton: true,
@@ -200,14 +229,20 @@ videoLlamadaBtn.addEventListener('click', function () {
     }
   })
 })
+.catch(error => {
+  // Manejar errores si ocurre un problema al obtener los detalles del usuario
+  console.error(error);
+});
+
+})
 
 
 function showImageMessage() {
   $(document).ready(function () {
     $(".imagenFile").on("click", function (e) {
       e.preventDefault(); // Evitar que el enlace se abra directamente
-      console.log($(this).data("src"));
-      var imagenSrc = $(this).data("src");
+
+      var imagenSrc = $(this)[0].getAttribute("src");
       console.log(imagenSrc);
       Swal.fire({
         imageUrl: imagenSrc,
@@ -264,4 +299,32 @@ function enviarVideoLlamada(enlace) {
 
   // Convertir el objeto de datos a formato JSON y enviarlo
   xhr.send(JSON.stringify(data));
+}
+
+function getDetailUser() {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
+
+    // Configurar la solicitud
+    xhr.open('GET', 'php/detail-user.php', true);
+
+    // Definir el manejador de eventos para la carga
+    xhr.onload = function() {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        // Procesar la respuesta del servidor PHP
+        const userData = JSON.parse(xhr.responseText);
+        resolve(userData); // Resuelve la promesa con los datos del usuario
+      } else {
+        reject('Error al obtener los detalles del usuario: ' + xhr.statusText);
+      }
+    };    
+
+    // Definir el manejador de eventos para los errores de red
+    xhr.onerror = function() {
+      reject('Error de red al obtener los detalles del usuario.');
+    };
+
+    // Enviar la solicitud
+    xhr.send();
+  });
 }

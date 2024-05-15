@@ -17,6 +17,15 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
-
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script>
+    if (localStorage.getItem('nuevoColor')) {
+  cambiarColorFondo(localStorage.getItem('nuevoColor'));
+}
+function cambiarColorFondo(color) {
+  // Cambia el color de fondo del body
+  document.body.style.backgroundColor = color;
+}
+  </script>
   
 </head>

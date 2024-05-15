@@ -27,7 +27,10 @@ require_once  '../vendor/autoload.php';
 $token_push = $data['token_push'];
 $message = $data['message'];
 $username = $data['username'];
-$credentials = new ServiceAccountCredentials(
+echo $token_push .''. $message .'';
+if(isset($token_push)!= null && isset($message) != null && isset($username) != null){  
+
+  $credentials = new ServiceAccountCredentials(
     "https://www.googleapis.com/auth/firebase.messaging",
     json_decode(file_get_contents("pvKey.json"), true)
 );
@@ -60,3 +63,5 @@ curl_setopt( $ch, CURLOPT_POSTFIELDS,'{
   $response = curl_exec( $ch );
   curl_close( $ch );
   echo $response;
+  
+}

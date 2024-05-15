@@ -6,7 +6,7 @@ require_once "session.php";
 <head>
 <style>
   .gtranslate_wrapper {
-  transform: translate(-100%, -45%);
+  transform: translate(0%, -40%);
     position: fixed;
 
     
@@ -15,6 +15,8 @@ require_once "session.php";
 div#gt_float_wrapper {transform: scale(0.8);}
 @media screen and (max-width: 350px) {
   .gtranslate_wrapper {
+    
+    z-index: 9999;  
     position: fixed;
     left: 0;
     bottom: 0;
@@ -43,7 +45,7 @@ div#gt_float_wrapper {transform: scale(0.8);}
         <div style="display: flex; align-items: center;">
           <a href="users.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
           <!-- Escapar el atributo alt con htmlspecialchars para evitar XSS -->
-          <img src="php/images/<?php echo htmlspecialchars($row['img']); ?>" alt="Profile Image" id="profile-image">
+          <img src="<?php echo htmlspecialchars($row['img']); ?>" alt="Profile Image" id="profile-image">
           <div class="details" style="margin-left: 10px;">
             <!-- Escapar los datos del usuario con htmlspecialchars para evitar XSS -->
             <span style="display: block;"><?php echo htmlspecialchars($row['fname'] . " " . $row['lname']); ?></span>
@@ -71,7 +73,9 @@ div#gt_float_wrapper {transform: scale(0.8);}
       <div class="chat-box">
 
       </div>
-      <img id="file-preview" class="file-preview">
+      <div><img id="file-preview" class="file-preview">
+      <span id="file-name" style="  position: fixed; transform:translate(35%, -135%)"></span></div>
+      
       <form action="#" class="typing-area" enctype="multipart/form-data" method="POST">
 
         <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
@@ -83,7 +87,7 @@ div#gt_float_wrapper {transform: scale(0.8);}
         <button class="adjuntarBtn active"><i class="fas fa-paperclip"></i></button>
         <!-- Contenedor para mostrar el nombre del archivo seleccionado -->
         <div id="file-info" style="display: none;">
-          <span id="file-name"></span>
+
           <button type="button" class="cancelarBtn active" onclick="cancelarArchivo()"><i class="fas fa-times"></i></button>
         </div>
         <button type="button" class="videollamadaBtn active" style="background-color: red"><i class="fas fa-video"></i></button>

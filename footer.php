@@ -8,4 +8,5 @@
         "float_switcher_open_direction": "bottom"
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
