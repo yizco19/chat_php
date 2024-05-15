@@ -12,7 +12,25 @@ Bienvenido al proyecto de chat desarrollado en PHP. Esta aplicación permite a l
 - **Notificaciones Push**: Se utilizan las notificaciones push de Firebase para enviar alertas en tiempo real a los dispositivos de los usuarios.
 - **Gestión de Administradores**: Los super administradores tienen el poder de gestionar los roles de los usuarios en el sistema.
 - **Adjuntar Archivos y Enviar Enlaces**: Los usuarios pueden compartir archivos y enlaces a videollamadas.
+- 
+## Configuración Adicional
 
+### Configuración de Firebase
+
+Para configurar las notificaciones push a través de Firebase Cloud Messaging (FCM), sigue estos pasos:
+
+1. Crea un proyecto en [Firebase Console](https://console.firebase.google.com/).
+2. Obtén las credenciales de Firebase (Firebase Web SDK) y configúralas en tu aplicación PHP.
+3. Configura la base de datos en tiempo real de Firebase para enviar notificaciones a los dispositivos de los usuarios.
+4. 
+
+### Configuración de la Base de Datos
+
+La aplicación utiliza MySQL como base de datos. Asegúrate de configurar la conexión a la base de datos en el archivo de configuración adecuado (`config.php`).
+
+### Configuración del Correo Electrónico
+
+Para enviar correos electrónicos de verificación de cuentas, restablecimiento de contraseñas u otras notificaciones por correo electrónico, configura los parámetros de correo electrónico en la aplicación.
 ## Capturas de Pantalla
 
 A continuación, algunas capturas de pantalla de la aplicación:
