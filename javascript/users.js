@@ -171,7 +171,8 @@ function mostrarOpciones() {
           <img src="resource/mailing.png">
         </button>
         <button id="cambiarColorFondo" onclick="elegirColorFondo()" style="border: none; background: none;">
-        <img id="color-picker" src="resource/color-picker.png" style="cursor: pointer;">
+        <img id="color-picker" src="resource/color-picker.png" style="cursor: pointer; height: 64px;
+        width: 64px;">
            </button>
       </div>
     `
