@@ -1,6 +1,6 @@
 # Proyecto de Chat con PHP
 
-![Chat con PHP](chat_php.png)
+![Chat con PHP](chat_php.jpg)
 
 Bienvenido al proyecto de chat desarrollado en PHP. Esta aplicación permite a los usuarios registrarse, iniciar sesión, enviar mensajes, recibir notificaciones push a través de Firebase Cloud Messaging (FCM), gestionar administradores (si el usuario es un super administrador), editar su perfil, adjuntar archivos y enviar enlaces para videollamadas, entre otras funcionalidades.
 
@@ -17,13 +17,13 @@ Bienvenido al proyecto de chat desarrollado en PHP. Esta aplicación permite a l
 
 A continuación, algunas capturas de pantalla de la aplicación:
 
-![Inicio de Sesión](login.png)
+![Inicio de Sesión](login.PNG)
 
-![Registro de Usuarios](register.png)
+![Registro de Usuarios](register.PNG)
 
 ## Requisitos del Sistema
 
-- PHP 7.x
+- PHP 8.x
 - MySQL
 - Servidor web (por ejemplo, Apache o Nginx)
 - Firebase Cloud Messaging (FCM) para notificaciones push
