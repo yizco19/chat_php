@@ -64,7 +64,6 @@ CREATE TABLE `users` (
 ALTER TABLE users ADD COLUMN is_super_admin BOOLEAN NOT NULL DEFAULT 0;
 
 
-
 --
 -- Indices de la tabla `messages`
 --
@@ -97,3 +96,17 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+CREATE TABLE topic (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255),
+  img VARCHAR(255)
+);
+
+-- Agregar la columna `topic_id` a la tabla `messages`
+ALTER TABLE `messages`
+  ADD COLUMN `topic_id` INT,
+  ADD CONSTRAINT `fk_messages_topic_id`
+  FOREIGN KEY (`topic_id`)
+  REFERENCES `topic` (`id`)
+  ON DELETE SET NULL
+  ON UPDATE CASCADE;

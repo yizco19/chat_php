@@ -1,4 +1,3 @@
-// JavaScript
 $(document).ready(function() {
     $('.admin-img').click(function() {
         // Realizar una petición AJAX para obtener los datos de los usuarios
@@ -9,18 +8,16 @@ $(document).ready(function() {
             success: function(data) {
                 // Construir el contenido HTML de los botones
                 var buttonsHtml = '<div class="swal2-content">';
-data.forEach(function(user) {
-    buttonsHtml += '<div class="user-row"><img src="' + user.img + '" alt="' + user.fname + ' ' + user.lname + '" class="user-img" /> <p style="display: inline-block; width: 180px;">' + user.fname + ' ' + user.lname + ' </p>';
-    if (user.admin == 1) {
-        buttonsHtml += '<button class="alta-btn" data-id="' + user.unique_id + '" disabled style="background-color: #dddddd;">Activar</button> <button class="baja-btn" data-id="' + user.unique_id + '" style="background-color: #ff6961;">Desactivar</button>';
-    } else {
-        buttonsHtml += '<button class="alta-btn" data-id="' + user.unique_id + '" style="background-color: #77dd77;">Activar</button> <button class="baja-btn" data-id="' + user.unique_id + '" disabled style="background-color: #dddddd;">Desactivar</button>';
-    }
-    buttonsHtml += '</div>'; // Esta línea cierra el div de user-row
-});
-buttonsHtml += '</div>'; // Esta línea cierra el div de swal2-content
-
-                
+                data.forEach(function(user) {
+                    buttonsHtml += '<div class="user-row"><img src="' + user.img + '" alt="' + user.fname + ' ' + user.lname + '" class="user-img" /> <p style="display: inline-block; width: 180px;">' + user.fname + ' ' + user.lname + ' </p>';
+                    if (user.admin == 1) {
+                        buttonsHtml += '<button class="alta-btn" data-id="' + user.unique_id + '" disabled style="background-color: #dddddd;">Activar</button> <button class="baja-btn" data-id="' + user.unique_id + '" style="background-color: #ff6961;">Desactivar</button>';
+                    } else {
+                        buttonsHtml += '<button class="alta-btn" data-id="' + user.unique_id + '" style="background-color: #77dd77;">Activar</button> <button class="baja-btn" data-id="' + user.unique_id + '" disabled style="background-color: #dddddd;">Desactivar</button>';
+                    }
+                    buttonsHtml += '</div>'; // Esta línea cierra el div de user-row
+                });
+                buttonsHtml += '</div>'; // Esta línea cierra el div de swal2-content
 
                 // Mostrar la SweetAlert con los botones
                 Swal.fire({
@@ -38,7 +35,6 @@ buttonsHtml += '</div>'; // Esta línea cierra el div de swal2-content
                 // Agregar eventos clic a los botones de Baja
                 $('.baja-btn').click(function() {
                     var userId = $(this).data('id');
-                    
                     desactivar(userId);
                 });
             },
@@ -54,9 +50,11 @@ buttonsHtml += '</div>'; // Esta línea cierra el div de swal2-content
             }
         });
     });
+
+    // click a id gestionarTopics
+
 });
 
-// Función para dar de alta a un usuario
 function activar(userId) {
     $.post('php/activate-admin.php', { userId: userId }, function(response) {
         // Aquí puedes manejar la respuesta del servidor después de dar de alta al usuario
@@ -91,5 +89,199 @@ function desactivar(userId) {
             icon: 'error',
             confirmButtonText: 'Cerrar'
         });
+    });
+}
+
+function gestionarTopics() {
+    // Realizar una petición AJAX para obtener los datos de los topics
+    $.ajax({
+        url: 'php/topics.php?action=get_all',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // Construir el contenido HTML de los botones
+            var buttonsHtml = '<div class="swal2-content">';
+            data.forEach(function(topic) {
+                // Muestra una imagen y nombre de cada topic y en su derecha para eliminar o editar
+                buttonsHtml += '<div class="topic-row"><img src="' + topic.img + '" alt="' + topic.name + '" class="topic-img"style="cursor: pointer; height: 64px; width: 64px;" /> <p style="display: inline-block; width: 180px;">' + topic.name + '</p>';
+                buttonsHtml += '<button class="eliminar-btn" data-id="' + topic.id + '" style="background-color: #ff6961;">Eliminar</button> <button class="editar-btn" data-id="' + topic.id + '" style="background-color: #77dd77;">Editar</button>';
+                buttonsHtml += '</div>'; // Esta línea cierra el div de topic-row
+            });
+            buttonsHtml += '</div>'; // Esta línea cierra el div de swal2-content
+
+            // Agregar el botón para agregar un nuevo topic
+            buttonsHtml += '<button class="agregar-btn" style="background-color: #4CAF50; color: white; padding: 10px 20px; margin-top: 20px;">Agregar Nuevo Topic</button>';
+
+            // Mostrar la SweetAlert con los botones
+            Swal.fire({
+                title: 'Gestionar Topics',
+                html: buttonsHtml,
+                icon: 'info'
+            });
+
+            // Agregar eventos clic a los botones de Eliminar
+            $('.eliminar-btn').click(function() {
+                var topicId = $(this).data('id');
+
+                eliminar(topicId);
+            });
+
+            // Agregar eventos clic a los botones de Editar
+            $('.editar-btn').click(function() {
+                var topicId = $(this).data('id');
+                editar(topicId);
+            });
+
+            // Agregar evento clic al botón de Agregar
+            $('.agregar-btn').click(function() {
+                agregarTopic();
+            });
+        },
+        error: function(xhr, status, error) {
+            // Manejar errores de la petición AJAX
+            console.error(xhr.responseText);
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un error al cargar los datos de los topics.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
+        }
+    });
+}
+// Función para dar de alta a un usuario
+function eliminar(topicId) {
+    $.post('php/topics.php?action=delete', { id: topicId }, function(response) {
+        // Aquí puedes manejar la respuesta del servidor después de dar de alta al usuario
+        console.log(response);
+        // Por ejemplo, mostrar un mensaje de éxito
+        Swal.fire({
+            title: 'Topic eliminado exitosamente',
+            icon:'success',
+            confirmButtonText: 'Cerrar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                gestionarTopics();
+            }
+        });
+        
+
+    }).fail(function(xhr, status, error) {
+        console.error(xhr.responseText);
+        Swal.fire({
+            title: 'Error',
+            text: 'Hubo un error al eliminar el topic.',
+            icon: 'error',
+            confirmButtonText: 'Cerrar'
+        });
+    });
+}
+// Función para editar un topic
+function editar(topicId) {
+    $.get('php/topics.php?action=get&id=' + topicId, function(topic) {
+        Swal.fire({
+            title: 'Editar Topic',
+            html: `<input type="text" id="topic-name" class="swal2-input" value="${topic.name}">
+                   <input type="file" id="topic-img" class="swal2-input" accept="image/*">`,
+            showCancelButton: true, // Agregado el botón de cancelar
+            focusConfirm: false,
+            preConfirm: () => {
+                const name = document.getElementById('topic-name').value;
+                const img = document.getElementById('topic-img').files[0];
+                return { name: name, img: img };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData();
+                formData.append('id', topicId);
+                formData.append('name', result.value.name);
+                formData.append('img', result.value.img);
+                $.ajax({
+                    url: 'php/topics.php?action=update',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        console.log(response);
+                        Swal.fire('Topic actualizado exitosamente').then((result) => {
+                            if (result.isConfirmed) {
+                                gestionarTopics();
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Hubo un error al actualizar el topic.',
+                            icon: 'error',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) { // Manejar la cancelación
+                gestionarTopics();
+            }
+        });
+    }, 'json').fail(function(xhr, status, error) {
+        console.error(xhr.responseText);
+        Swal.fire({
+            title: 'Error',
+            text: 'Hubo un error al cargar los datos del topic.',
+            icon: 'error',
+            confirmButtonText: 'Cerrar'
+        });
+    });
+}
+
+
+// Función para agregar un nuevo topic
+function agregarTopic() {
+    Swal.fire({
+        title: 'Agregar Nuevo Topic',
+        html: '<input type="text" id="new-topic-name" class="swal2-input" placeholder="Nombre del Topic">' +
+              '<input type="file" id="new-topic-img" class="swal2-input" accept="image/*" placeholder="Imagen del Topic">',
+        showCancelButton: true,
+        confirmButtonText: 'Agregar',
+        cancelButtonText: 'Cancelar',
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+            const name = $('#new-topic-name').val();
+            const img = $('#new-topic-img')[0].files[0];
+            if (!name || !img) {
+                Swal.showValidationMessage('Por favor ingresa el nombre y selecciona una imagen.');
+            }
+            return { name: name, img: img };
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData();
+            formData.append('name', result.value.name);
+            formData.append('img', result.value.img);
+            $.ajax({
+                url: 'php/topics.php?action=insert',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log(response);
+                    Swal.fire('Nuevo topic agregado exitosamente');
+                    gestionarTopics(); // Recargar la lista de topics después de agregar uno nuevo
+                },
+                error: function(xhr, status, error) {
+                    console.log(response);
+                    console.error(xhr.responseText);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un error al agregar el nuevo topic.',
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    });
+                }
+            });
+        }
     });
 }

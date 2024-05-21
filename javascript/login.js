@@ -17,7 +17,7 @@ continueBtn.onclick = ()=>{
               console.log(data);    
               if(data === "success"){
                 location.href = "users.php";
-                  //espera a que se cargue el archivo js
+                
                 
               }else{
                 errorText.style.display = "block";

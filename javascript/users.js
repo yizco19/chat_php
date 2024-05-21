@@ -84,18 +84,11 @@ function realizarBusqueda() {
 
 getUsers();
 
-const profileImage = document.getElementById('profile-image');
-profileImage.addEventListener('click', function() {
-mostrarOpciones();
-
-
-});
 
 
 function getUsers() {
   let xhr = new XMLHttpRequest();
   let filterCheckbox = document.getElementById('filterCheckboxInput');
-  alert(filterCheckbox.checked);
   let url = "php/users.php?filterUserNotMessage=" + filterCheckbox.checked;
   xhr.open("GET", url, true);
   xhr.onload = () => {
@@ -151,33 +144,7 @@ function mostrarDialogoEmail(emailActual) {
 // Función para cambiar el correo electrónico mediante una solicitud XMLHttpRequest a PHP
 
 
-function mostrarOpciones() {
 
-
-  // Mostrar un cuadro de diálogo personalizado con tres opciones
-  Swal.fire({
-    title: 'Seleccione una opción:',
-    showCancelButton: true,
-    cancelButtonText: 'Cancelar',
-    html: `
-      <div class="swal2-actions">
-        <button id="cambiarNombre" onclick="cambiarNombre()" style="border: none; background: none;">
-          <img src="resource/cambiar_nombre.png">
-        </button>
-        <button id="cambiarImagen" onclick="cambiarImagen()" style="border: none; background: none;">
-          <img src="resource/cambiar_imagen.png">
-        </button>
-        <button id="cambiarEmail" onclick="cambiarEmail()" style="border: none; background: none;">
-          <img src="resource/mailing.png">
-        </button>
-        <button id="cambiarColorFondo" onclick="elegirColorFondo()" style="border: none; background: none;">
-        <img id="color-picker" src="resource/color-picker.png" style="cursor: pointer; height: 64px;
-        width: 64px;">
-           </button>
-      </div>
-    `
-  });
-}
 function elegirColorFondo() {
   Swal.fire({
       title: 'Cambiando Color de Fondo',
@@ -259,6 +226,7 @@ function cambiarNombre() {
 
 
 function cambiarImagen() {
+  const profileImage = document.getElementById('profile-image');
   var imageUrl = profileImage.src;
   Swal.fire({
     imageUrl: imageUrl,

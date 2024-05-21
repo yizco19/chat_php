@@ -101,6 +101,55 @@
     text-decoration: none;
     cursor: pointer;
   }
+  /* Estilos generales para botones */
+.eliminar-btn ,.editar-btn {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Estilo para botón de eliminar */
+.eliminar-btn {
+    background-color: #ff6961;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.eliminar-btn:hover {
+    background-color: #ff5c53;
+    transform: translateY(-2px);
+}
+
+.eliminar-btn:active {
+    background-color: #e15550;
+    transform: translateY(0);
+}
+
+/* Estilo para botón de editar */
+.editar-btn {
+    background-color: #77dd77;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.editar-btn:hover {
+    background-color: #6cd66c;
+    transform: translateY(-2px);
+}
+
+.editar-btn:active {
+    background-color: #66cc66;
+    transform: translateY(0);
+}
+
+/* Estilo adicional para todos los botones en su estado deshabilitado */
+button:disabled {
+    background-color: #dddddd;
+    cursor: not-allowed;
+}
+
 </style>
 
 <body>
@@ -115,7 +164,44 @@
             $row = mysqli_fetch_assoc($sql);
           }
           ?>
-          <img src="<?php echo $row['img']; ?>" alt="" id="profile-image">
+         <img src="<?php echo $row['img']; ?>" alt="" id="profile-image">
+<script>
+  const profileImage = document.getElementById('profile-image');
+  profileImage.addEventListener('click', function() {
+    mostrarOpciones();
+  });
+
+  function mostrarOpciones() {
+    var viewOpciones = `<div class="swal2-actions">
+      <button id="cambiarNombre" onclick="cambiarNombre()" style="border: none; background: none;">
+        <img src="resource/cambiar_nombre.png">
+      </button>
+      <button id="cambiarImagen" onclick="cambiarImagen()" style="border: none; background: none;">
+        <img src="resource/cambiar_imagen.png">
+      </button>
+      <button id="cambiarEmail" onclick="cambiarEmail()" style="border: none; background: none;">
+        <img src="resource/mailing.png">
+      </button>
+      <button id="cambiarColorFondo" onclick="elegirColorFondo()" style="border: none; background: none;">
+        <img id="color-picker" src="resource/color-picker.png" style="cursor: pointer; height: 64px; width: 64px;">
+      </button>`;
+    <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
+      //agrega una button para gestionar adminstradores
+      viewOpciones += `<button id="gestionarTopics" onclick="gestionarTopics()" style="border: none; background: none;">
+        <img src="resource/topic.png" style="cursor: pointer; height: 64px; width: 64px;">
+      </button>`;
+    <?php endif;?>
+    viewOpciones += `</div>`;
+
+    // Mostrar un cuadro de diálogo personalizado con cuatro opciones
+    Swal.fire({
+      title: 'Seleccione una opción:',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      html: viewOpciones
+    });
+  }
+</script>
           <div class="details">
             <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
             <p><?php echo $row['status']; ?></p>
@@ -163,16 +249,16 @@
               </div>
 
               <div class="container mt-5">
-    <div class="form-group row">
-      <label for="sortSelect" class="col-sm-2 col-form-label">Ordenar por fecha:</label>
-      <div class="col-sm-10">
-        <select id="sortSelect" class="form-control">
-          <option value="asc">Ascendente</option>
-          <option value="desc">Descendente</option>
-        </select>
-      </div>
-    </div>
-  </div>
+                <div class="form-group row">
+                  <label for="sortSelect" class="col-sm-2 col-form-label">Ordenar por fecha:</label>
+                  <div class="col-sm-10">
+                    <select id="sortSelect" class="form-control">
+                      <option value="asc">Ascendente</option>
+                      <option value="desc">Descendente</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
