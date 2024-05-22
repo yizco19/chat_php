@@ -93,7 +93,7 @@ function displayMessage($outgoing_id, $incoming_id,$conn) {
 $query = mysqli_query($conn, $sql);
 
 // Cadena para buscar al inicio del enlace
-$inicio = "https://meet.jit.si/usuario";
+$inicio = "https://meet.jit.si/";
 
 if ($query) {
   if (mysqli_num_rows($query) > 0) {

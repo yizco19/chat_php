@@ -7,7 +7,6 @@
     position: relative;
     align-items: center;
     justify-content: space-between;
-
   }
 
   .users .search .text {
@@ -63,6 +62,61 @@
     display: none;
   }
 
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #77dd77;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #77dd77;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(14px);
+  }
+
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
   /* Estilos del modal */
   .modal {
     display: none;
@@ -101,8 +155,22 @@
     text-decoration: none;
     cursor: pointer;
   }
+
+  .assign-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .assign-img {
+    width: 20px;
+    height: 20px;
+  }
+
   /* Estilos generales para botones */
-.eliminar-btn ,.editar-btn {
+  .eliminar-btn,
+  .editar-btn {
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
@@ -110,46 +178,106 @@
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s, transform 0.3s;
-}
+  }
 
-/* Estilo para botón de eliminar */
-.eliminar-btn {
+  /* Estilo para botón de eliminar */
+  .eliminar-btn {
     background-color: #ff6961;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  }
 
-.eliminar-btn:hover {
+  .eliminar-btn:hover {
     background-color: #ff5c53;
     transform: translateY(-2px);
-}
+  }
 
-.eliminar-btn:active {
+  .eliminar-btn:active {
     background-color: #e15550;
     transform: translateY(0);
-}
+  }
 
-/* Estilo para botón de editar */
-.editar-btn {
+  /* Estilo para botón de editar */
+  .editar-btn {
     background-color: #77dd77;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  }
 
-.editar-btn:hover {
+  .editar-btn:hover {
     background-color: #6cd66c;
     transform: translateY(-2px);
-}
+  }
 
-.editar-btn:active {
+  .editar-btn:active {
     background-color: #66cc66;
     transform: translateY(0);
-}
+  }
 
-/* Estilo adicional para todos los botones en su estado deshabilitado */
-button:disabled {
+  /* Estilo adicional para todos los botones en su estado deshabilitado */
+  button:disabled {
     background-color: #dddddd;
     cursor: not-allowed;
+  }
+
+  .user-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .user-name {
+    width: 90px;
+    flex: 1;
+  }
+
+  .status-text {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+    font-size: 14px;
+  }
+  .topic-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .topic-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .topic-name {
+    flex: 1;
+  }
+  .circulo {
+	width: 20rem;
+	height: 20rem;
+	border-radius: 50%;
+	background: red;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+  margin:0px auto;
+  padding:3%
 }
 
+.circulo > .letra {
+	font-family: sans-serif;
+	color: white;
+	font-size: 15rem;
+	font-weight: bold;
+}
 </style>
 
 <body>
@@ -233,10 +361,14 @@ button:disabled {
       <div>
 
         <div class="search">
-          <i class="fas fa-filter" id="filterIcon"></i>
+          <div class="options">
+          <i class="fas fa-filter" id="filterIcon" style="margin-right: 20px;"></i>
+          <i class="fa-solid fa-address-book"></i>
+          </div>
           <span class="text">Seleccione un usuario</span>
           <input type="text" placeholder="Buscar por nombre...">
           <button><i class="fas fa-search"></i></button>
+         
         </div>
 
         <div class="modal" id="myModal">
@@ -249,8 +381,8 @@ button:disabled {
               </div>
 
               <div class="container mt-5">
-                <div class="form-group row">
-                  <label for="sortSelect" class="col-sm-2 col-form-label">Ordenar por fecha:</label>
+                <div class="form-group col">
+                  <label for="sortSelect">Ordenar por fecha:</label>
                   <div class="col-sm-10">
                     <select id="sortSelect" class="form-control">
                       <option value="asc">Ascendente</option>

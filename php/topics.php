@@ -104,6 +104,7 @@ if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) {
                 $updatedRows = updateTopic($id, $name, $ruta);
                 echo json_encode(['message' => 'Registros actualizados: ' . $updatedRows]);
             } else {
+                
                 echo json_encode(['error' => 'Error al subir la imagen']);
             }
             break;

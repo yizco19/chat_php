@@ -110,3 +110,11 @@ ALTER TABLE `messages`
   REFERENCES `topic` (`id`)
   ON DELETE SET NULL
   ON UPDATE CASCADE;
+
+CREATE TABLE user_topics (
+    user_id INT,
+    topic_id INT,
+    PRIMARY KEY (user_id, topic_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
+);

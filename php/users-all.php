@@ -13,7 +13,7 @@ if (!isset($_SESSION['unique_id'])) {
 $unique_id = $_SESSION['unique_id'];
 
 // Consulta para obtener todos los usuarios menores al usuario actual
-$sql = "SELECT unique_id, fname, lname, admin, img FROM users WHERE unique_id != $unique_id";
+$sql = "SELECT user_id,unique_id, fname, lname, admin, img FROM users WHERE unique_id != $unique_id";
 $result = mysqli_query($conn, $sql);
 
 // Crear un arreglo vacío
