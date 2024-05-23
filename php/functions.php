@@ -7,6 +7,20 @@ function render_php(string $template, array $data = []){
     extract($data);
     require "$template.php";
 }
+function connect() {
+    $host = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "chat-master";
+
+    try {
+        $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $conn;
+    } catch (PDOException $e) {
+        die(json_encode(['error' => 'Error de conexión a la base de datos']));
+    }
+}
 
 function sendEmailInBackground(string $incoming_id,string $outgoing_id, string $username) {
 

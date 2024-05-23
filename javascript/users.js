@@ -15,7 +15,6 @@ searchIcon.onclick = ()=>{
 const filterIcon = document.getElementById('filterIcon');
 const modal = document.getElementById('myModal');
 const closeModal = document.getElementsByClassName('close')[0];
-const filterCheckbox = document.getElementById('filterCheckboxInput');
 
 // Mostrar el modal al hacer clic en el icono de filtro
 filterIcon.addEventListener('click', () => {
@@ -60,7 +59,9 @@ function realizarBusqueda() {
       }
     }
   };
+
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  const filterCheckbox = document.getElementById('filterCheckboxInput'); // Obtener el elemento del checkbox
   xhr.send("searchTerm=" + searchTerm + "&filterUserNotMessage=" + filterCheckbox.checked + "&sortDirection=" + sortDirection); // Agregar el parámetro para la dirección de ordenamiento
 }
 

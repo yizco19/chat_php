@@ -46,3 +46,19 @@ SELECT *
 FROM user_topics ut
 JOIN topics t ON ut.topic_id = t.id
 WHERE ut.user_id = 3
+
+SELECT
+    t.*,
+    ut.user_id
+FROM
+    topic t
+LEFT JOIN user_topics ut ON
+    t.id = ut.topic_id AND ut.user_id = :user_id
+
+
+    
+    SELECT 
+        ut.*,u.fname,u.lname,u.img
+    FROM user_topics ut
+    JOIN  users u ON
+        ut.user_id = u.user_id AND ut.topic_id = 13

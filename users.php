@@ -97,15 +97,15 @@
     transition: .4s;
   }
 
-  input:checked + .slider {
+  input:checked+.slider {
     background-color: #77dd77;
   }
 
-  input:focus + .slider {
+  input:focus+.slider {
     box-shadow: 0 0 1px #77dd77;
   }
 
-  input:checked + .slider:before {
+  input:checked+.slider:before {
     transform: translateX(14px);
   }
 
@@ -243,43 +243,48 @@
     text-align: center;
     font-size: 14px;
   }
-  .topic-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
 
-  .topic-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-
-  .topic-name {
-    flex: 1;
-  }
   .circulo {
-	width: 20rem;
-	height: 20rem;
-	border-radius: 50%;
-	background: red;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-  margin:0px auto;
-  padding:3%
-}
+    width: 20rem;
+    height: 20rem;
+    border-radius: 50%;
+    background: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto;
+    padding: 3%;
+  }
 
-.circulo > .letra {
-	font-family: sans-serif;
-	color: white;
-	font-size: 15rem;
-	font-weight: bold;
-}
+  .circulo>.letra {
+    font-family: sans-serif;
+    color: white;
+    font-size: 13.8rem;
+    font-weight: bold;
+  }
 </style>
-
+<?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
+  <style>
+      
+      .topic-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+    
+      .topic-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    
+      .topic-name {
+        flex: 1;
+      }
+    </style>
+    <?php endif;?>
 <body>
   <div class="wrapper">
     <section class="users">
@@ -292,15 +297,15 @@
             $row = mysqli_fetch_assoc($sql);
           }
           ?>
-         <img src="<?php echo $row['img']; ?>" alt="" id="profile-image">
-<script>
-  const profileImage = document.getElementById('profile-image');
-  profileImage.addEventListener('click', function() {
-    mostrarOpciones();
-  });
+          <img src="<?php echo $row['img']; ?>" alt="" id="profile-image">
+          <script>
+            const profileImage = document.getElementById('profile-image');
+            profileImage.addEventListener('click', function() {
+              mostrarOpciones();
+            });
 
-  function mostrarOpciones() {
-    var viewOpciones = `<div class="swal2-actions">
+            function mostrarOpciones() {
+              var viewOpciones = `<div class="swal2-actions">
       <button id="cambiarNombre" onclick="cambiarNombre()" style="border: none; background: none;">
         <img src="resource/cambiar_nombre.png">
       </button>
@@ -313,23 +318,24 @@
       <button id="cambiarColorFondo" onclick="elegirColorFondo()" style="border: none; background: none;">
         <img id="color-picker" src="resource/color-picker.png" style="cursor: pointer; height: 64px; width: 64px;">
       </button>`;
-    <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
-      //agrega una button para gestionar adminstradores
-      viewOpciones += `<button id="gestionarTopics" onclick="gestionarTopics()" style="border: none; background: none;">
+              <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
+                //agrega una button para gestionar adminstradores
+                viewOpciones += `<button id="gestionarTopics" onclick="gestionarTopics()" style="border: none; background: none;">
         <img src="resource/topic.png" style="cursor: pointer; height: 64px; width: 64px;">
       </button>`;
-    <?php endif;?>
-    viewOpciones += `</div>`;
+              <?php endif; ?>
 
-    // Mostrar un cuadro de diálogo personalizado con cuatro opciones
-    Swal.fire({
-      title: 'Seleccione una opción:',
-      showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      html: viewOpciones
-    });
-  }
-</script>
+              viewOpciones += `</div>`;
+
+              // Mostrar un cuadro de diálogo personalizado con cuatro opciones
+              Swal.fire({
+                title: 'Seleccione una opción:',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                html: viewOpciones
+              });
+            }
+          </script>
           <div class="details">
             <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
             <p><?php echo $row['status']; ?></p>
@@ -362,23 +368,57 @@
 
         <div class="search">
           <div class="options">
-          <i class="fas fa-filter" id="filterIcon" style="margin-right: 20px;"></i>
-          <i class="fa-solid fa-address-book"></i>
+            <i class="fas fa-filter" id="filterIcon" style="margin-right: 20px;"></i>
+            <?php if (
+              isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 0
+              && isset($_SESSION['admin']) && $_SESSION['admin'] == 0
+            ) : ?>
+              <i class="fa-solid fa-address-book" id="agendaIcon"></i>
+              <script src="javascript/agenda.js"></script>
+              <style>
+                .option-img {
+                  width: 100px;
+                  height: 100px;
+                  cursor: pointer;
+                  margin: 10px;
+                  display: inline-block;
+                }
+
+                .option-img:hover {
+                  border: 2px solid #007BFF;
+                  border-radius: 10px;
+                }
+              </style>
+            <?php endif; ?>
+
           </div>
           <span class="text">Seleccione un usuario</span>
           <input type="text" placeholder="Buscar por nombre...">
           <button><i class="fas fa-search"></i></button>
-         
+
         </div>
 
         <div class="modal" id="myModal">
           <div class="modal-content">
             <span class="close">&times;</span>
             <div style="display: flex; flex-direction: column; align-items: center;">
-              <div style="margin-bottom: 10px; display: flex; align-items: center;">
+               
+            <div style="margin-bottom: 10px; display: flex; align-items: center;" id="filtroMensaje">
                 <label for="filterCheckboxInput" style="margin-right: 10px;">Mostrar solo usuarios con mensajes</label>
                 <input type="checkbox" id="filterCheckboxInput">
               </div>
+              <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 0): ?>
+    <script>
+        console.log('qweqweqe' + <?php echo $_SESSION['admin']; ?>);
+        let filterCheckbox = document.getElementById('filterCheckboxInput');
+        filterCheckbox.checked = true;
+    </script>
+    <style>
+      #filtroMensaje{
+        visibility: hidden;
+      }
+    </style>
+<?php endif; ?>
 
               <div class="container mt-5">
                 <div class="form-group col">

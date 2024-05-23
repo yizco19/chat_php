@@ -2,27 +2,15 @@
 session_start();
 
 // Función para conectarse a la base de datos usando PDO
-function connect() {
-    $host = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "chat-master";
-
-    try {
-        $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return $conn;
-    } catch (PDOException $e) {
-        die(json_encode(['error' => 'Error de conexión a la base de datos']));
-    }
-}
+require_once 'functions.php';
 
 // Verificar si el usuario tiene permisos de administrador
+/*
 if (!isset($_SESSION['is_super_admin']) || $_SESSION['is_super_admin'] != 1) {
     echo json_encode(['error' => 'No tienes permisos para acceder a esta funcionalidad']);
     exit;
 }
-
+*/
 // Obtener el tipo de acción
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
@@ -31,7 +19,7 @@ switch ($action) {
         getUserTopics();
         break;
         case 'get-topics-data':
-            $userId = isset($_GET['userId']) ? intval($_GET['userId']) : 0;
+            $userId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
             if ($userId == 0) {
                 echo json_encode(['error' => 'ID de usuario no proporcionado']);
                 exit;
@@ -40,6 +28,15 @@ switch ($action) {
             $topics= getTopicsData($userId);
             echo json_encode($topics);
             break;
+            case 'get-admin-data':
+                $topicId = isset($_GET['topic_id'])? intval($_GET['topic_id']) : 0;
+                if ($topicId == 0) {
+                   echo json_encode(['error' => 'ID de tema no proporcionado']);
+                   exit;
+                }
+                $admins = getAdminByTopics($topicId);
+                echo json_encode($admins);
+                break;
     case 'admin-topics':
         adminTopicsUpdate();
         break;
@@ -53,6 +50,20 @@ switch ($action) {
     default:
         echo json_encode(['error' => 'Acción no válida']);
         break;
+}
+function getAdminByTopics($topicId) {
+    $conn = connect();
+    $topicId = intval($topicId);
+    $Query ="    SELECT 
+    ut.*,u.fname,u.lname,u.img,u.unique_id
+FROM user_topics ut
+JOIN  users u ON
+    ut.user_id = u.user_id AND ut.topic_id = :topic_id";
+    $stmt = $conn->prepare($Query);
+    $stmt->bindParam(':topic_id', $topicId, PDO::PARAM_INT);
+    $stmt->execute();
+    $admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $admins;
 }
 // Función para administrar los temas del usuario
 function adminTopicsUpdate() {

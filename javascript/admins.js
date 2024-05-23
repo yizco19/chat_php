@@ -1,79 +1,86 @@
 $(document).ready(function() {
     $('.admin-img').click(function() {
         // Realizar una petición AJAX para obtener los datos de los usuarios
-        $.ajax({
-            url: 'php/users-all.php',
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                // Construir el contenido HTML de los usuarios con interruptores y botón de asignar topics
-                var usersHtml = '<div class="swal2-content">';
-                data.forEach(function(user) {
-                    usersHtml += '<div class="user-row">';
-                    usersHtml += '<img src="' + user.img + '" alt="' + user.fname + ' ' + user.lname + '" class="user-img" />';
-                    usersHtml += '<p class="user-name">' + user.fname + ' ' + user.lname + '</p>';
-                    usersHtml += '<p class="user-name">Admin</p>';
-                    usersHtml += '<label class="switch">';
-
-                    usersHtml += '<input type="checkbox" class="toggle-switch" data-id="' + user.unique_id + '" ' + (user.admin == 1 ? 'checked' : '') + '>';
-                    usersHtml += '<span class="slider round"></span>';
-                    usersHtml += '</label>';
-                    usersHtml += '<p class="user-name">Topics</p>';
-                    usersHtml += '<button class="assign-btn" data-id="' + user.user_id + '" data-name="'+ user.fname + ' ' + user.lname+' "><img src="resource/topic.png" alt="Asignar Topics" class="user-img"></button>';
-
-                    usersHtml += '</div>'; // Esta línea cierra el div de user-row
-                });
-                usersHtml += '</div>'; // Esta línea cierra el div de swal2-content
-
-                // Mostrar la SweetAlert con los usuarios, el interruptor y el botón de asignar topics
-                Swal.fire({
-                    title: 'Gestionar Administradores',
-                    html: usersHtml,
-                    icon: 'info'
-                });
-
-                // Agregar eventos change a los interruptores
-                $('.toggle-switch').change(function() {
-                    var userId = $(this).data('id');
-                    if (this.checked) {
-                        activar(userId);
-                    } else {
-                        desactivar(userId);
-                    }
-                });
-
-                // Agregar eventos clic a los botones de asignar topics
-                $('.assign-btn').click(function() {
-                    var userId = $(this).data('id');
-                    var name = $(this).data('name');
-                    asignarTopics(userId,name);
-                });
-            },
-            error: function(xhr, status, error) {
-                // Manejar errores de la petición AJAX
-                console.error(xhr.responseText);
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Hubo un error al cargar los datos de los usuarios.',
-                    icon: 'error',
-                    confirmButtonText: 'Cerrar'
-                });
-            }
-        });
+        gestionarAdministradores();
     });
 
     // click a id gestionarTopics
 });
 
 
+function gestionarAdministradores() {
+    $.ajax({
+        url: 'php/users-all.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            // Construir el contenido HTML de los usuarios con interruptores y botón de asignar topics
+            var usersHtml = '<div class="swal2-content">';
+            data.forEach(function (user) {
+                usersHtml += '<div class="user-row">';
+                usersHtml += '<img src="' + user.img + '" alt="' + user.fname + ' ' + user.lname + '" class="user-img" />';
+                usersHtml += '<p class="user-name">' + user.fname + ' ' + user.lname + '</p>';
+                usersHtml += '<p class="user-name">Admin</p>';
+                usersHtml += '<label class="switch">';
+
+                usersHtml += '<input type="checkbox" class="toggle-switch" data-id="' + user.user_id + '" ' + (user.admin == 1 ? 'checked' : '') + '>';
+                usersHtml += '<span class="slider round"></span>';
+                usersHtml += '</label>';
+                if(user.admin == 1){
+
+
+                usersHtml += '<p class="user-name">Topics</p>';
+                usersHtml += '<button class="assign-btn" data-id="' + user.user_id + '" data-name="' + user.fname + ' ' + user.lname + ' "><img src="resource/topic.png" alt="Asignar Topics" class="user-img"></button>';
+            }
+                usersHtml += '</div>'; // Esta línea cierra el div de user-row
+            });
+            usersHtml += '</div>'; // Esta línea cierra el div de swal2-content
+
+
+            // Mostrar la SweetAlert con los usuarios, el interruptor y el botón de asignar topics
+            Swal.fire({
+                title: 'Gestionar Administradores',
+                html: usersHtml,
+                icon: 'info'
+            });
+
+            // Agregar eventos change a los interruptores
+            $('.toggle-switch').change(function () {
+                var userId = $(this).data('id');
+                if (this.checked) {
+                    activar(userId);
+                } else {
+                    desactivar(userId);
+                }
+            });
+
+            // Agregar eventos clic a los botones de asignar topics
+            $('.assign-btn').click(function () {
+                var userId = $(this).data('id');
+                var name = $(this).data('name');
+                asignarTopics(userId, name);
+            });
+        },
+        error: function (xhr, status, error) {
+            // Manejar errores de la petición AJAX
+            console.error(xhr.responseText);
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un error al cargar los datos de los usuarios.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
+        }
+    });
+}
+
 function activar(userId) {
-    $.post('php/activate-admin.php', { userId: userId }, function(response) {
-        // Aquí puedes manejar la respuesta del servidor después de dar de alta al usuario
+    $.post('php/admin-actions.php?action=activate', { userId: userId }, function(response) {
         console.log(response);
-        // Por ejemplo, mostrar un mensaje de éxito
-        Swal.fire('Usuario dado de alta exitosamente');
+        Swal.fire('Usuario dado de alta exitosamente').then(function() {
+            gestionarAdministradores();
+        });
     }).fail(function(xhr, status, error) {
-        // Manejar errores de la solicitud
         console.error(xhr.responseText);
         Swal.fire({
             title: 'Error',
@@ -84,15 +91,13 @@ function activar(userId) {
     });
 }
 
-// Función para dar de baja a un usuario
 function desactivar(userId) {
-    $.post('php/desactivate-admin.php', { userId: userId }, function(response) {
-        // Aquí puedes manejar la respuesta del servidor después de dar de baja al usuario
+    $.post('php/admin-actions.php?action=deactivate', { userId: userId }, function(response) {
         console.log(response);
-        // Por ejemplo, mostrar un mensaje de éxito
-        Swal.fire('Usuario dado de baja exitosamente');
+        Swal.fire('Usuario dado de baja exitosamente').then(function() {
+            gestionarAdministradores();
+        });
     }).fail(function(xhr, status, error) {
-        // Manejar errores de la solicitud
         console.error(xhr.responseText);
         Swal.fire({
             title: 'Error',
@@ -102,18 +107,20 @@ function desactivar(userId) {
         });
     });
 }
+
 function asignarTopics(userId,name) {
     gestionarTopicsAdmin(userId,name);
 }
 function gestionarTopicsAdmin(userId, name) {
-    console.log(name);
+
     // Realizar una petición AJAX para obtener los datos de los topics
     $.ajax({
-        url: 'php/user-topics.php?action=get-topics-data&userId=' + userId,
+        url: 'php/user-topics.php?action=get-topics-data&user_id=' + userId,
         type: 'GET',
         dataType: 'json',
         success: function (data) {
             // Construir el contenido HTML de los botones
+            console.log(data);
             var buttonsHtml = '<div class="swal2-content">';
             data.forEach(function (topic) {
                 // Muestra una imagen y nombre de cada topic y en su derecha para eliminar o editar
@@ -133,7 +140,10 @@ function gestionarTopicsAdmin(userId, name) {
                 title: 'Gestionar Topics de ' + name,
                 html: buttonsHtml,
                 icon: 'info',
-            });
+
+            }).then(function() {
+                gestionarAdministradores();
+        });
 
             // Agregar eventos change a los interruptores
             $('.topic-toggle').change(function() {

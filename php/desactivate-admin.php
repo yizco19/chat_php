@@ -5,9 +5,16 @@ if(isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1){
     
     if(isset($_POST['userId']) && !empty($_POST['userId'])){
         $userId = mysqli_real_escape_string($conn, $_POST['userId']);
-        $sql = mysqli_query($conn, "UPDATE users SET admin = 0 WHERE unique_id = {$userId}");
+        $sql = mysqli_query($conn, "UPDATE users SET admin = 0 WHERE user_id = {$userId}");
+
         if($sql){
+
+            $sql2 = mysqli_query($conn, "DELETE FROM user_topics WHERE user_id = {$userId}");
+        if($sql2){
             echo "success";
+        }else{
+            echo "Algo salió mal. ¡Inténtalo de nuevo!";
+        }
         }else{
             echo "Algo salió mal. ¡Inténtalo de nuevo!";
         }

@@ -116,5 +116,5 @@ CREATE TABLE user_topics (
     topic_id INT,
     PRIMARY KEY (user_id, topic_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
+    FOREIGN KEY (topic_id) REFERENCES topic(id) ON DELETE CASCADE
 );

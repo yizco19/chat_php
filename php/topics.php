@@ -1,24 +1,10 @@
 <?php
 session_start();
 
-if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) {
+if (true) {
     $action = isset($_GET['action']) ? $_GET['action'] : '';
 
-    function connect() {
-        $host = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "chat-master";
-
-        try {
-            $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $conn;
-        } catch (PDOException $e) {
-            die(json_encode(['error' => 'Error de conexión a la base de datos']));
-        }
-    }
-
+require_once 'functions.php';
     function getAllTopics() {
         $conn = connect();
         $stmt = $conn->query("SELECT * FROM topic");
@@ -104,7 +90,7 @@ if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) {
                 $updatedRows = updateTopic($id, $name, $ruta);
                 echo json_encode(['message' => 'Registros actualizados: ' . $updatedRows]);
             } else {
-                
+
                 echo json_encode(['error' => 'Error al subir la imagen']);
             }
             break;
