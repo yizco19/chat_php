@@ -22,9 +22,8 @@ function connect() {
     }
 }
  function getImgById($topic_id) {
-    $id = isset($_GET['id']) ? $_GET['id'] : '';
-    if ($id) {
-        $topic = getTopicById($id);
+    if ($topic_id) {
+        $topic = getTopicById($topic_id);
         if (strpos($topic['img'], 'php/') === 0) {
             // Si la imagen comienza con 'php/', la mostramos como una imagen simple
             $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
@@ -37,7 +36,7 @@ function connect() {
             // De lo contrario, mostramos la imagen como una imagen simple
             $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
         }
-        return $topic['img'];
+        return  $topic['img'];
     } else {
         return '';
     }

@@ -47,9 +47,9 @@ div#gt_float_wrapper {transform: scale(0.8);}
         <div style="display: flex; align-items: center;">
           <a href="users.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
           <!-- Escapar el atributo alt con htmlspecialchars para evitar XSS -->
-          <?php if($topic_id!=null && $topic_id!=""){
-            echo getTopicById($topic_id);
-          } ?>
+          <?php if($topic_id != null && $topic_id != ""): ?>
+            <?php echo getImgById($topic_id); ?>
+          <?php endif; ?>
           <img src="<?php echo htmlspecialchars($row['img']); ?>" alt="Profile Image" id="profile-image">
           <div class="details" style="margin-left: 10px;">
             <!-- Escapar los datos del usuario con htmlspecialchars para evitar XSS -->
