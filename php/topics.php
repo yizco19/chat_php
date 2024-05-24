@@ -12,17 +12,13 @@ require_once 'functions.php';
         return $topics;
     }
 
-    function getTopicById($id) {
-        $conn = connect();
-        $stmt = $conn->prepare("SELECT * FROM topic WHERE id = :id");
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        $topic = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $topic;
-    }
 
-    function insertTopic($name, $img) {
-        $img_path = 'php/'. $img;
+
+    function insertTopic($name, $img,$letra) {
+        if($letra==false){
+            $img_path = 'php/'. $img;
+        }
+        $img_path='letra/'.$img;
         $conn = connect();
         $stmt = $conn->prepare("INSERT INTO topic (name, img) VALUES (:name, :img)");
         $stmt->bindParam(':name', $name);
@@ -53,6 +49,21 @@ require_once 'functions.php';
     switch ($action) {
         case 'get_all':
             $topics = getAllTopics();
+            foreach ($topics as $key => &$topic) {
+                if (strpos($topic['img'], 'php/') === 0) {
+                    // Si la imagen comienza con 'php/', la mostramos como una imagen simple
+                    $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
+                } else if (strpos($topic['img'], 'letra/') === 0) {
+                    // Si la imagen comienza con 'letra/', la dividimos y mostramos como un círculo con la letra y color
+                    $cadena = substr($topic['img'], 6); // Corta la parte "letra/" y toma el resto
+                    $subarray = explode("/", $cadena);
+                    $topic['img'] = '<div class="circulo" style="cursor: pointer; height: 64px; width: 64px; background: ' . $subarray[1] . '"><span class="letra">' . $subarray[0] . '</span></div>';
+                } else {
+                    // De lo contrario, mostramos la imagen como una imagen simple
+                    $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
+                }
+            }
+            
             echo json_encode($topics);
             break;
         case 'get':
@@ -66,15 +77,23 @@ require_once 'functions.php';
             break;
         case 'insert':
             $name = isset($_POST['name']) ? $_POST['name'] : '';
+            //comprueba si img es un file o un letra de texto
+            
             $img = isset($_FILES['img']) ? $_FILES['img'] : null;
             // Manejar la carga del archivo
             if ($img && $img['error'] == UPLOAD_ERR_OK) {
                 $img_nombre = basename($img['name']);
                 $ruta = "topics/" . $img_nombre;
                 move_uploaded_file($img['tmp_name'], $ruta);
-                $insertedId = insertTopic($name, $ruta);
+                $insertedId = insertTopic($name, $ruta,false);
                 echo json_encode(['message' => 'Nuevo tema insertado con ID: ' . $insertedId]);
             } else {
+                if(isset($_POST['img']) && $_POST['img']!= '' && $_POST['img']!= null && $_POST['img']!= 'null' ){
+                
+                    $result = insertTopic($name, $_POST['img'],true);
+                    echo json_encode(['message' => 'Nuevo tema insertado con ID: '. $result]);
+                    exit;
+                }
                 echo json_encode(['error' => 'Error al subir la imagen']);
             }
             break;
@@ -103,6 +122,8 @@ require_once 'functions.php';
                 echo json_encode(['error' => 'ID no proporcionado']);
             }
             break;
+            
+        case 'get-topics-data':
         default:
             echo json_encode(['error' => 'Acción no válida']);
             break;
@@ -110,4 +131,3 @@ require_once 'functions.php';
 } else {
     echo json_encode(['error' => 'No tienes permisos para acceder a topics.php']);
 }
-?>

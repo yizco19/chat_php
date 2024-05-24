@@ -46,7 +46,10 @@ function gestionarTopics() {
             var buttonsHtml = '<div class="swal2-content">';
             data.forEach(function(topic) {
                 // Muestra una imagen y nombre de cada topic
-                buttonsHtml += '<div class="topic-row" data-id="'+topic.id+'"><img src="' + topic.img + '" alt="' + topic.name + '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> <p style="display: inline-block; width: 180px;">' + topic.name + '</p></div>';
+                buttonsHtml += '<div class="topic-row" data-id="'+topic.id+'">';
+                buttonsHtml += topic.img;
+                
+                buttonsHtml +='<p style="display: inline-block; width: 180px;">' + topic.name + '</p></div>';
             });
             buttonsHtml += '</div>';
 
@@ -104,7 +107,7 @@ function seleccionarAdmin(topicId) {
                     console.log(data);
                     var adminsHtml = '<div class="swal2-content">';
                     data.forEach(function(user) {
-                        adminsHtml += '<div class="admin-row" data-id="'+user.user_id+'"><p style="cursor: pointer;">' + user.lname  + '</p><img </div>';
+                        adminsHtml += '<div class="admin-row" data-id="'+user.unique_id+'"><p style="cursor: pointer;">' + user.lname  + '</p><img </div>';
                         adminsHtml += '<img src="' + user.img + '" alt="' + user.lname + '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" />';
                     });
                     adminsHtml += '</div>';
@@ -139,5 +142,5 @@ function iniciarChat(topicId, adminId) {
     // Aquí puedes agregar el código para iniciar el chat con el topic y el administrador seleccionados
     //console.log('Iniciar chat con Topic ID:', topicId, 'y Admin ID:', adminId);
     //Swal.fire('Chat iniciado', `Chat iniciado con el Topic ID: ${topicId} y Admin ID: ${adminId}`, 'success');
-    location.href = 'chat.php?user_id=' + adminId;
+    location.href = 'chat.php?user_id=' + adminId + '&topic_id=' + topicId;
 }

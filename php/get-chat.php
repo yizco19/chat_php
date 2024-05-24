@@ -5,9 +5,11 @@ if (isset($_SESSION['unique_id'])) {
     
     // Obtener el ID de usuario saliente de la sesión
     $outgoing_id = $_SESSION['unique_id'];
+
     
     // Obtener el ID de usuario entrante del formulario
     $incoming_id = mysqli_real_escape_string($conn, $_POST['incoming_id']);
+    $topic_id = isset($_POST['topic_id'])? mysqli_real_escape_string ($conn, $_POST['topic_id']) : null;
     $first = $_SESSION["first_login"];
     if ($first) {
         displayMessage($outgoing_id, $incoming_id, $conn);
@@ -19,6 +21,9 @@ if (isset($_SESSION['unique_id'])) {
                 WHERE incoming_msg_id = {$outgoing_id} 
                 AND outgoing_msg_id = {$incoming_id} 
                 AND is_seen = 0";
+                if($topic_id!== null) {
+                    $sql_seen.= " AND topic_id = {$topic_id}";
+                }
     $msg_seen = mysqli_query($conn, $sql_seen);
 
     // Obtener los mensajes no enviados para el usuario entrante
@@ -27,6 +32,9 @@ if (isset($_SESSION['unique_id'])) {
                 WHERE incoming_msg_id = {$incoming_id} 
                 AND outgoing_msg_id = {$outgoing_id} 
                 AND is_sender = 0";
+                                if($topic_id!== null) {
+                                    $sql_seen.= " AND topic_id = {$topic_id}";
+                                }
     $msg_sender = mysqli_query($conn, $sql_sender);
 
     // Manejo de errores y actualización de mensajes

@@ -244,25 +244,8 @@
     font-size: 14px;
   }
 
-  .circulo {
-    width: 20rem;
-    height: 20rem;
-    border-radius: 50%;
-    background: red;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin: 0 auto;
-    padding: 3%;
-  }
+  
 
-  .circulo>.letra {
-    font-family: sans-serif;
-    color: white;
-    font-size: 13.8rem;
-    font-weight: bold;
-  }
 </style>
 <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
   <style>

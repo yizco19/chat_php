@@ -200,7 +200,10 @@ function gestionarTopics() {
             var buttonsHtml = '<div class="swal2-content">';
             data.forEach(function(topic) {
                 // Muestra una imagen y nombre de cada topic y en su derecha para eliminar o editar
-                buttonsHtml += '<div class="topic-row"><img src="' + topic.img + '" alt="' + topic.name + '" class="topic-img"style="cursor: pointer; height: 64px; width: 64px;" /> <p style="display: inline-block; width: 180px;">' + topic.name + '</p>';
+                buttonsHtml += '<div class="topic-row">';
+                buttonsHtml += topic.img;
+
+                buttonsHtml += '<p style="display: inline-block; width: 180px;">' + topic.name + '</p>';
                 buttonsHtml += '<button class="eliminar-btn" data-id="' + topic.id + '" style="background-color: #ff6961;">Eliminar</button> <button class="editar-btn" data-id="' + topic.id + '" style="background-color: #77dd77;">Editar</button>';
                 buttonsHtml += '</div>'; // Esta línea cierra el div de topic-row
             });
@@ -346,11 +349,12 @@ function agregarTopic() {
         preConfirm: () => {
             const name = $('#new-topic-name').val();
             const img = $('#new-topic-img')[0].files[0];
-            if (name==null || name=='') {
+            if (name == null || name == '') {
                 Swal.showValidationMessage('Por favor ingresa el nombre.');
+                return;
             }
             if (!img) {
-                // Mostrar la confirmación dentro de la primera SweetAlert
+                var color = getRandomColor();
                 return Swal.mixin({
                     customClass: {
                         confirmButton: 'swal2-confirm-custom',
@@ -359,15 +363,15 @@ function agregarTopic() {
                     buttonsStyling: false
                 }).fire({
                     title: 'Imagen defecto',
-                    html: '<div class="circulo"><span class="letra">'+name.substring(0,1)+'</span></div>',
+                    html: '<div class="circulo" style="background:'+ color +'"><span class="letra">'+ name.substring(0,1) +'</span></div>',
                     showCancelButton: true,
                     confirmButtonText: 'Sí, continuar',
                     cancelButtonText: 'Cancelar',
                     allowOutsideClick: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        return { name: name, img: null };
-                    }else{
+                        return { name: name, img: name.substring(0,1) +'/'+ color };
+                    } else {
                         return { name: null, img: null };
                     }
                 });
@@ -406,4 +410,9 @@ function agregarTopic() {
             });
         }
     });
+}
+
+// Generar un color aleatorio en formato hexadecimal
+function getRandomColor() {
+    return '#' + Math.floor(Math.random()*16777215).toString(16);
 }

@@ -5,6 +5,7 @@ if (isset($_SESSION['unique_id'])) {
     include_once "functions.php";
     $outgoing_id = $_SESSION['unique_id'];
     $incoming_id = mysqli_real_escape_string($conn, $_POST['incoming_id']);
+    $topic_id = isset($_POST['topic_id'])? mysqli_real_escape_string($conn, $_POST['topic_id']) : null;
     $message = mysqli_real_escape_string($conn, $_POST['message']);
     $adjunto = isset($_FILES['attachment']) ? $_FILES['attachment'] : null;
     // Manejar la carga del archivo
@@ -17,10 +18,15 @@ if (isset($_SESSION['unique_id'])) {
     }
 
 
-    // Si no hay adjunto, inserta solo el mensaje
-    $query = mysqli_query($conn, "INSERT INTO messages (incoming_msg_id, outgoing_msg_id, msg, attachment, is_sender)
-                                    VALUES ({$incoming_id}, {$outgoing_id}, '{$message}', '{$adjunto_nombre}', 0)") or die(mysqli_error($conn));
+    echo 'topic='.$topic_id;
+    if ($topic_id !== null && $topic_id!== "null"  && $topic_id!== ""   && $topic_id!== "null" ) {  
 
+        $query = mysqli_query($conn, "INSERT INTO messages (incoming_msg_id, outgoing_msg_id, msg, attachment, topic_id, is_sender)
+                                        VALUES ({$incoming_id}, {$outgoing_id}, '{$message}', '{$adjunto_nombre}', {$topic_id}, 0)") or die(mysqli_error($conn));
+    } else {
+        $query = mysqli_query($conn, "INSERT INTO messages (incoming_msg_id, outgoing_msg_id, msg, attachment, is_sender)
+                                        VALUES ({$incoming_id}, {$outgoing_id}, '{$message}', '{$adjunto_nombre}', 0)") or die(mysqli_error($conn));
+    }
     $sql2 = "SELECT * FROM users WHERE unique_id = {$incoming_id}";
     // Comprueba si el usuario está en línea para notificarlo
     $query2 = mysqli_query($conn, $sql2) or die(mysqli_error($conn));

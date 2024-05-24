@@ -1,8 +1,9 @@
+
 <?php
 require_once "session.php";
+require_once "php/functions.php";
 ?>
 <?php include_once "header.php"; ?>
-
 <head>
 <style>
   .gtranslate_wrapper {
@@ -33,6 +34,7 @@ div#gt_float_wrapper {transform: scale(0.8);}
         <?php
         // Evitar inyección de SQL usando mysqli_prepare
         $user_id = mysqli_real_escape_string($conn, $_GET['user_id']);
+        $topic_id = isset($_GET['topic_id'])? mysqli_real_escape_string($conn, $_GET['topic_id']) : null;
         $sql = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$user_id}");
         if (mysqli_num_rows($sql) > 0) {
           $row = mysqli_fetch_assoc($sql);
@@ -45,6 +47,9 @@ div#gt_float_wrapper {transform: scale(0.8);}
         <div style="display: flex; align-items: center;">
           <a href="users.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
           <!-- Escapar el atributo alt con htmlspecialchars para evitar XSS -->
+          <?php if($topic_id!=null && $topic_id!=""){
+            echo getTopicById($topic_id);
+          } ?>
           <img src="<?php echo htmlspecialchars($row['img']); ?>" alt="Profile Image" id="profile-image">
           <div class="details" style="margin-left: 10px;">
             <!-- Escapar los datos del usuario con htmlspecialchars para evitar XSS -->
@@ -79,6 +84,7 @@ div#gt_float_wrapper {transform: scale(0.8);}
       <form action="#" class="typing-area" enctype="multipart/form-data" method="POST">
 
         <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
+        <input type="text" class="topic_id" name="topic_id" value="<?php echo $topic_id; ?>" hidden>
         <input type="text" name="message" class="input-field" placeholder="Escribe tu mensaje aquí..." autocomplete="off">
         <button class="send-btn"><i class="fab fa-telegram-plane"></i></button>
         <!-- Campo de entrada de archivo -->

@@ -87,23 +87,23 @@ getUsers();
 
 
 
-function getUsers() {
-  let xhr = new XMLHttpRequest();
-  let filterCheckbox = document.getElementById('filterCheckboxInput');
-  let url = "php/users.php?filterUserNotMessage=" + filterCheckbox.checked;
-  xhr.open("GET", url, true);
-  xhr.onload = () => {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        let data = xhr.response;
-        if (!searchBar.classList.contains("active")) {
-          usersList.innerHTML = data;
+  function getUsers() {
+    let xhr = new XMLHttpRequest();
+    let filterCheckbox = document.getElementById('filterCheckboxInput');
+    let url = "php/users.php?filterUserNotMessage=" + filterCheckbox.checked;
+    xhr.open("GET", url, true);
+    xhr.onload = () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          let data = xhr.response;
+          if (!searchBar.classList.contains("active")) {
+            usersList.innerHTML = data;
+          }
         }
       }
-    }
-  };
-  xhr.send();
-}
+    };
+    xhr.send();
+  }
 
 
 // Función para mostrar el cuadro de diálogo de SweetAlert con el correo electrónico actual

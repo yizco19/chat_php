@@ -21,6 +21,35 @@ function connect() {
         die(json_encode(['error' => 'Error de conexión a la base de datos']));
     }
 }
+ function getImgById($topic_id) {
+    $id = isset($_GET['id']) ? $_GET['id'] : '';
+    if ($id) {
+        $topic = getTopicById($id);
+        if (strpos($topic['img'], 'php/') === 0) {
+            // Si la imagen comienza con 'php/', la mostramos como una imagen simple
+            $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
+        } else if (strpos($topic['img'], 'letra/') === 0) {
+            // Si la imagen comienza con 'letra/', la dividimos y mostramos como un círculo con la letra y color
+            $cadena = substr($topic['img'], 6); // Corta la parte "letra/" y toma el resto
+            $subarray = explode("/", $cadena);
+            $topic['img'] = '<div class="circulo" style="cursor: pointer; height: 64px; width: 64px; background: ' . $subarray[1] . '"><span class="letra">' . $subarray[0] . '</span></div>';
+        } else {
+            // De lo contrario, mostramos la imagen como una imagen simple
+            $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
+        }
+        return $topic['img'];
+    } else {
+        return '';
+    }
+}
+function getTopicById($id) {
+    $conn = connect();
+    $stmt = $conn->prepare("SELECT * FROM topic WHERE id = :id");
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $topic = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $topic;
+}
 
 function sendEmailInBackground(string $incoming_id,string $outgoing_id, string $username) {
 

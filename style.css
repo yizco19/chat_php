@@ -392,6 +392,26 @@ body{
   opacity: 1;
   pointer-events: auto;
 }
+.circulo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+  padding: 3%;
+}
+
+.circulo > .letra {
+  font-family: sans-serif;
+  color: white;
+  font-size: 1.5rem; /* Tamaño de fuente proporcional al círculo */
+  font-weight: bold;
+}
+
 
 /* Responive media query */
 @media screen and (max-width: 695px) {

@@ -1,5 +1,6 @@
 const form = document.querySelector(".typing-area"),
   incoming_id = form.querySelector(".incoming_id").value,
+  topic_id = form.querySelector(".topic_id").value,
   inputField = form.querySelector(".input-field"),
   sendBtn = form.querySelector(".send-btn"),
   adjuntarBtn = form.querySelector(".adjuntarBtn"),
@@ -103,7 +104,7 @@ function getMessages() {
     }
   };
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("incoming_id=" + incoming_id);
+  xhr.send("incoming_id=" + incoming_id + "&topic_id=" + topic_id);
   showImageMessage();
 }
 
