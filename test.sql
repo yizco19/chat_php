@@ -62,3 +62,32 @@ LEFT JOIN user_topics ut ON
     FROM user_topics ut
     JOIN  users u ON
         ut.user_id = u.user_id AND ut.topic_id = 13
+// contact topics
+SELECT t.*
+FROM topic t
+LEFT JOIN (
+	SELECT m.*msg_id
+    FROM messages
+INNER JOIN (
+        SELECT incoming_msg_id, MAX(created_at) AS max_created_at
+        FROM messages
+        WHERE outgoing_msg_id = 1656696425 AND m.topic_id NOT null
+        GROUP BY incoming_msg_id
+    ) max_dates ON m.incoming_msg_id = max_dates.incoming_msg_id AND m.created_at = max_dates.max_created_at
+    ) m ON t.id= m.topic_id
+
+
+
+SELECT t.*, m.msg, u.fname, u.lname, u.img
+                FROM topic t
+                JOIN (
+                    SELECT m.*
+                    FROM messages m
+                    INNER JOIN (
+                        SELECT incoming_msg_id, MAX(created_at) AS max_created_at
+                        FROM messages
+                        WHERE outgoing_msg_id = 757733187 AND topic_id IS NOT NULL
+                        GROUP BY incoming_msg_id
+                    ) max_dates ON m.incoming_msg_id = max_dates.incoming_msg_id AND m.created_at = max_dates.max_created_at
+                ) m ON t.id = m.topic_id
+                JOIN users u ON m.incoming_msg_id = u.unique_id

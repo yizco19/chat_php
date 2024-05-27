@@ -29,7 +29,7 @@ LEFT JOIN (
     INNER JOIN (
         SELECT incoming_msg_id, MAX(created_at) AS max_created_at
         FROM messages
-        WHERE outgoing_msg_id = $outgoing_id
+        WHERE outgoing_msg_id = $outgoing_id AND (topic_id = 0 OR topic_id is null)
         GROUP BY incoming_msg_id
     ) max_dates ON m.incoming_msg_id = max_dates.incoming_msg_id AND m.created_at = max_dates.max_created_at
 ) m ON u.unique_id = m.incoming_msg_id

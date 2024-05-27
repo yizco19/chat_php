@@ -10,9 +10,10 @@ if (isset($_SESSION['unique_id'])) {
     // Obtener el ID de usuario entrante del formulario
     $incoming_id = mysqli_real_escape_string($conn, $_POST['incoming_id']);
     $topic_id = isset($_POST['topic_id'])? mysqli_real_escape_string ($conn, $_POST['topic_id']) : null;
+
     $first = $_SESSION["first_login"];
     if ($first) {
-        displayMessage($outgoing_id, $incoming_id, $conn);
+        displayMessage($outgoing_id, $incoming_id, $conn,$topic_id);
         
     }
     // Obtener los mensajes no leídos para el usuario saliente
@@ -21,9 +22,10 @@ if (isset($_SESSION['unique_id'])) {
                 WHERE incoming_msg_id = {$outgoing_id} 
                 AND outgoing_msg_id = {$incoming_id} 
                 AND is_seen = 0";
-                if($topic_id!== null) {
+                if($topic_id!== null && $topic_id!== "") {
                     $sql_seen.= " AND topic_id = {$topic_id}";
                 }
+
     $msg_seen = mysqli_query($conn, $sql_seen);
 
     // Obtener los mensajes no enviados para el usuario entrante
@@ -72,7 +74,7 @@ if (isset($_SESSION['unique_id'])) {
                 
                 $_SESSION["first_login"] = false;
             }else{
-                displayMessage($outgoing_id, $incoming_id, $conn);
+                displayMessage($outgoing_id, $incoming_id, $conn,$topic_id);
             }
             
         }
@@ -86,7 +88,7 @@ if (isset($_SESSION['unique_id'])) {
     header("location: ../login.php");
 }
 
-function displayMessage($outgoing_id, $incoming_id,$conn) {
+function displayMessage($outgoing_id, $incoming_id,$conn, $topic_id) {
     $output = "";
     $prev_date = ""; 
 
@@ -96,9 +98,15 @@ function displayMessage($outgoing_id, $incoming_id,$conn) {
       $sql = "SELECT * FROM messages 
       LEFT JOIN users ON users.unique_id = messages.outgoing_msg_id
       WHERE ((outgoing_msg_id = {$outgoing_id} AND incoming_msg_id = {$incoming_id})
-             OR (outgoing_msg_id = {$incoming_id} AND incoming_msg_id = {$outgoing_id}))
-      ORDER BY created_at ASC";
+             OR (outgoing_msg_id = {$incoming_id} AND incoming_msg_id = {$outgoing_id}))";
+if ($topic_id !== null && $topic_id!== "") {
+  $sql .= " AND topic_id = {$topic_id}";
+} else {
+  $sql .= ' AND (topic_id IS NULL OR topic_id = "")';
+}
+$sql .= " ORDER BY created_at ASC";
 $query = mysqli_query($conn, $sql);
+
 
 // Cadena para buscar al inicio del enlace
 $inicio = "https://meet.jit.si/";

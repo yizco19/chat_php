@@ -243,6 +243,40 @@
     text-align: center;
     font-size: 14px;
   }
+  .topics-list {
+  overflow: hidden; /* Ocultar las barras de desplazamiento */
+  overflow-x: scroll;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  cursor: grab; /* Cambiar el cursor para indicar que se puede agarrar */
+}
+
+/* Cambiar el cursor cuando se está desplazando */
+.topics-list:active {
+  cursor: grabbing;
+}
+
+.topic {
+  padding: 10px 20px;
+  border-radius: 20px;
+  margin-right: 10px;
+  
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.topic:hover {
+  background-color: #ddd;
+  transform: translateY(-2px);
+}
+
+.topic:active {
+  background-color: #ccc;
+  transform: translateY(0);
+}
 
   
 
@@ -253,6 +287,7 @@
       .topic-row {
         display: flex;
         align-items: center;
+        overflow: hidden;
         margin-bottom: 10px;
       }
     
@@ -346,6 +381,19 @@
 
 
       </header>
+      <div class="topics-list">
+  <div class="topic"><img src="register.PNG" style="width: 64px; height: 64px;"/> <span>Topic 2</span></div>
+  <div class="topic">2</div>
+  <div class="topic">Topic 3</div>
+  <div class="topic">Topic 3</div>
+  <div class="topic">Topic 3</div>
+  <div class="topic">Topic 3</div>
+  <div class="topic">Topic 3</div>
+  <div class="topic">Topic 3</div>
+  <div class="topic">Topic 3</div>
+  <!-- Agrega más temas según sea necesario -->
+</div>
+<script src="javascript/topics.js"></script>
 
       <div>
 
