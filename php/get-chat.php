@@ -10,7 +10,7 @@ if (isset($_SESSION['unique_id'])) {
     // Obtener el ID de usuario entrante del formulario
     $incoming_id = mysqli_real_escape_string($conn, $_POST['incoming_id']);
     $topic_id = isset($_POST['topic_id'])? mysqli_real_escape_string ($conn, $_POST['topic_id']) : null;
-
+    echo "topic_id: ". $topic_id;
     $first = $_SESSION["first_login"];
     if ($first) {
         displayMessage($outgoing_id, $incoming_id, $conn,$topic_id);
@@ -105,6 +105,7 @@ if ($topic_id !== null && $topic_id!== "") {
   $sql .= ' AND (topic_id IS NULL OR topic_id = "")';
 }
 $sql .= " ORDER BY created_at ASC";
+
 $query = mysqli_query($conn, $sql);
 
 

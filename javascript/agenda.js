@@ -11,15 +11,9 @@ document.getElementById('agendaIcon').addEventListener('click', function() {
     });
 
     document.getElementById('userOption').addEventListener('click', function() {
-        Swal.fire({
-            title: 'Seleccione un administrador',
-            text: 'Mostrando lista de administradores...',
-            // Aquí agregarías el código para obtener y mostrar la lista de administradores
-        }).then(result => {
             const filterCheckbox = document.getElementById('filterCheckboxInput'); // Obtener el elemento del checkbox
             filterCheckbox.checked = false; // Desactivar el checkbox
             getUsers();
-        });
     });
 
     document.getElementById('topicsOption').addEventListener('click', function() {

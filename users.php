@@ -382,15 +382,6 @@
 
       </header>
       <div class="topics-list">
-  <div class="topic"><img src="register.PNG" style="width: 64px; height: 64px;"/> <span>Topic 2</span></div>
-  <div class="topic">2</div>
-  <div class="topic">Topic 3</div>
-  <div class="topic">Topic 3</div>
-  <div class="topic">Topic 3</div>
-  <div class="topic">Topic 3</div>
-  <div class="topic">Topic 3</div>
-  <div class="topic">Topic 3</div>
-  <div class="topic">Topic 3</div>
   <!-- Agrega más temas según sea necesario -->
 </div>
 <script src="javascript/topics.js"></script>

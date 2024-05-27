@@ -35,6 +35,7 @@ div#gt_float_wrapper {transform: scale(0.8);}
         // Evitar inyección de SQL usando mysqli_prepare
         $user_id = mysqli_real_escape_string($conn, $_GET['user_id']);
         $topic_id = isset($_GET['topic_id'])? mysqli_real_escape_string($conn, $_GET['topic_id']) : null;
+        echo 'console.log('.$topic_id.')';
         $sql = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$user_id}");
         if (mysqli_num_rows($sql) > 0) {
           $row = mysqli_fetch_assoc($sql);

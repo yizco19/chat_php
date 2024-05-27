@@ -13,7 +13,7 @@ foreach ($topics as $topic) {
 
     // Ahora puedes mostrar esta información como desees, por ejemplo:
         $output.= '<div class="topic">';
-        $output.= '<a href="chat.php?topic_id='. $topicId. ' &user_id='.$unique_id.' " >';
+        $output.= '<a href="chat.php?topic_id='. $topicId. '&user_id='.$unique_id.' " >';
          if (strpos($topicImg, 'php/') === 0) {
             // Si la imagen comienza con 'php/', la mostramos como una imagen simple
         $output.= '<img src="' . $topicImg . '" alt="' . $topic['name'] . '" style=" height: 64px; width: 64px;" /> ';
