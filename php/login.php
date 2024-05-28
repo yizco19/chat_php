@@ -24,6 +24,12 @@ if (!empty($email) && !empty($password)) {
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['is_super_admin'] = $row['is_super_admin'];
                 $_SESSION['first_login'] = true;
+
+                $userIp = getUserIP();
+                $geolocation = getGeolocation($userIp);
+                if($geolocation != "error"){
+                    $sql3 = mysqli_query($conn, "UPDATE users SET localizacion = '{$geolocation}' WHERE unique_id = {$row['unique_id']}");
+                }
                 echo "success";
             } else {
                 echo "Algo salió mal. ¡Inténtalo de nuevo!";
@@ -37,3 +43,30 @@ if (!empty($email) && !empty($password)) {
 } else {
     echo "¡Todos los campos de entrada son obligatorios!";
 }
+
+function getUserIP() {
+    // Obtén la dirección IP del usuario
+    $ip = '';
+    if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+
+function getGeolocation($ip) {
+    // Usa ip-api.com para obtener la geolocalización
+    $url = "http://ip-api.com/json/{$ip}";
+    $response = file_get_contents($url);
+    $data = json_decode($response, true);
+    if (isset($data['status']) && $data['status'] == 'success') {
+        $geolocation = $data['country']. ", ". $data['regionName']. ", ". $data['city'];
+    } else {
+        $geolocation = "error";
+    }
+    return $geolocation;
+}
+?>

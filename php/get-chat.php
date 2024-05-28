@@ -10,7 +10,6 @@ if (isset($_SESSION['unique_id'])) {
     // Obtener el ID de usuario entrante del formulario
     $incoming_id = mysqli_real_escape_string($conn, $_POST['incoming_id']);
     $topic_id = isset($_POST['topic_id'])? mysqli_real_escape_string ($conn, $_POST['topic_id']) : null;
-    echo "topic_id: ". $topic_id;
     $first = $_SESSION["first_login"];
     if ($first) {
         displayMessage($outgoing_id, $incoming_id, $conn,$topic_id);
@@ -40,7 +39,7 @@ if (isset($_SESSION['unique_id'])) {
     $msg_sender = mysqli_query($conn, $sql_sender);
 
     // Manejo de errores y actualización de mensajes
-    if ($msg_seen && $msg_sender) { // Cambiado de || a &&
+    if ($msg_seen && $msg_sender) { 
 		
         $row_seen = mysqli_fetch_assoc($msg_seen);
         $row_sender = mysqli_fetch_assoc($msg_sender);
@@ -67,13 +66,11 @@ if (isset($_SESSION['unique_id'])) {
             mysqli_query($conn, $sql_update_sender);
 			
         }
-
+        $_SESSION["first_login"] = false;
         // Mostrar mensajes después de actualizar los mensajes no leídos
         if($unread_count_seen > 0 || $unread_count_sender > 0) {
-            if( $first) {
-                
-                $_SESSION["first_login"] = false;
-            }else{
+            if( !$first) {
+
                 displayMessage($outgoing_id, $incoming_id, $conn,$topic_id);
             }
             

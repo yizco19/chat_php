@@ -26,9 +26,9 @@ LEFT JOIN (
 
 WHERE ";
 
-$sql_search = " AND (fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%')";
+$sql_search = " AND (CONCAT(u.fname, ' ', u.lname) LIKE '%{$searchTerm}%')";
 if($super_admin ==1){
-$sql_search = " (fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%')";
+    $sql_search = " (CONCAT(u.fname, ' ', u.lname) LIKE '%{$searchTerm}%')";
 }else{
 if($admin == 1){
 $sql .= "admin = 0";

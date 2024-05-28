@@ -137,7 +137,7 @@
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 30%;
+    width: 390px;
     /* Ancho del modal */
   }
 

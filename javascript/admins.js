@@ -3,11 +3,28 @@ $(document).ready(function() {
         // Realizar una petición AJAX para obtener los datos de los usuarios
         gestionarAdministradores();
     });
-
+            // Agregar eventos change a los interruptores
+            $('.toggle-switch').change(function () {
+                var userId = $(this).data('id');
+                if (this.checked) {
+                    activar(userId);
+                } else {
+                    desactivar(userId);
+                }
+            });
     // click a id gestionarTopics
 });
-
-
+$(document).ready(function() {
+    // Usa delegación de eventos para manejar los cambios en los interruptores
+    $(document).on('change', '.toggle-switch', function () {
+        var userId = $(this).data('id');
+        if (this.checked) {
+            activar(userId);
+        } else {
+            desactivar(userId);
+        }
+    });
+});
 function gestionarAdministradores() {
     $.ajax({
         url: 'php/users-all.php',
@@ -17,22 +34,24 @@ function gestionarAdministradores() {
             // Construir el contenido HTML de los usuarios con interruptores y botón de asignar topics
             var usersHtml = '<div class="swal2-content">';
             data.forEach(function (user) {
+                if(user.admin == 1){
                 usersHtml += '<div class="user-row">';
                 usersHtml += '<img src="' + user.img + '" alt="' + user.fname + ' ' + user.lname + '" class="user-img" />';
                 usersHtml += '<p class="user-name">' + user.fname + ' ' + user.lname + '</p>';
-                usersHtml += '<p class="user-name">Admin</p>';
+                /*usersHtml += '<p class="user-name">Admin</p>';
                 usersHtml += '<label class="switch">';
 
                 usersHtml += '<input type="checkbox" class="toggle-switch" data-id="' + user.user_id + '" ' + (user.admin == 1 ? 'checked' : '') + '>';
                 usersHtml += '<span class="slider round"></span>';
-                usersHtml += '</label>';
-                if(user.admin == 1){
+                usersHtml += '</label>';*/
+
 
 
                 usersHtml += '<p class="user-name">Topics</p>';
                 usersHtml += '<button class="assign-btn" data-id="' + user.user_id + '" data-name="' + user.fname + ' ' + user.lname + ' "><img src="resource/topic.png" alt="Asignar Topics" class="user-img"></button>';
-            }
+
                 usersHtml += '</div>'; // Esta línea cierra el div de user-row
+            }
             });
             usersHtml += '</div>'; // Esta línea cierra el div de swal2-content
 
@@ -78,7 +97,7 @@ function activar(userId) {
     $.post('php/admin-actions.php?action=activate', { userId: userId }, function(response) {
         console.log(response);
         Swal.fire('Usuario dado de alta exitosamente').then(function() {
-            gestionarAdministradores();
+            
         });
     }).fail(function(xhr, status, error) {
         console.error(xhr.responseText);
@@ -95,7 +114,7 @@ function desactivar(userId) {
     $.post('php/admin-actions.php?action=deactivate', { userId: userId }, function(response) {
         console.log(response);
         Swal.fire('Usuario dado de baja exitosamente').then(function() {
-            gestionarAdministradores();
+            
         });
     }).fail(function(xhr, status, error) {
         console.error(xhr.responseText);
@@ -124,7 +143,9 @@ function gestionarTopicsAdmin(userId, name) {
             var buttonsHtml = '<div class="swal2-content">';
             data.forEach(function (topic) {
                 // Muestra una imagen y nombre de cada topic y en su derecha para eliminar o editar
-                buttonsHtml += '<div class="topic-row"><img src="' + topic.img + '" alt="' + topic.name + '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> <p style="display: inline-block; width: 180px;">' + topic.name + '</p>';
+                buttonsHtml += '<div class="topic-row">';
+                buttonsHtml +=topic.img;
+                buttonsHtml +='<p style="display: inline-block; width: 180px;">' + topic.name + '</p>';
                 // Toggle switch para cada topic
                 buttonsHtml += '<label class="switch">';
                 buttonsHtml += '<input type="checkbox" class="topic-toggle" data-id="' + topic.id + '" ' + (topic.user_id !== null ? 'checked' : '') + '>';

@@ -49,7 +49,7 @@ while ($row = mysqli_fetch_assoc($query)) {
         }
     } else {
         // Si created_at es null, establecemos un valor predeterminado
-        $created_at = "Fecha no disponible";
+        $created_at = "";
         $filter = true; // Establecemos $filter como verdadero si no hay fecha de creación
     }
 
@@ -73,6 +73,14 @@ while ($row = mysqli_fetch_assoc($query)) {
                         </div>
                     </div>
                     <div class="last-message-time">' . $created_at . '</div>
-                    <div class="status-dot ' . $offline . '"><i class="fas fa-circle"></i></div>
-                </a>';
+                    <div class="status-dot ' . $offline . '" style="margin-right:10px;"><i class="fas fa-circle"></i></div>';
+                    if ($super_admin == 1) {
+                        $output .= '<label class="switch">';
+                        $output .= '<input type="checkbox" class="toggle-switch" data-id="' . $row['user_id'] . '" ' . ($row['admin'] == 1 ? 'checked' : '') . '>';
+                        $output .= '<span class="slider round"></span>';
+                        $output .= '</label>';
+                    }
+                $output.='</a>';
+
+
 }

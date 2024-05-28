@@ -6,36 +6,26 @@ require_once "php/functions.php";
 <?php include_once "header.php"; ?>
 <head>
 <style>
-  .gtranslate_wrapper {
-  transform: translate(0%, -40%);
-    position: fixed;
 
-    
-    z-index: 9999;  
-}
-div#gt_float_wrapper {transform: scale(0.8);}
-@media screen and (max-width: 350px) {
-  .gtranslate_wrapper {
-    
-    z-index: 9999;  
-    position: fixed;
-    left: 0;
-    bottom: 0;
-  }
-  
-}
 </style>
 </head>
 
 <body>
+  
+<div class="gtranslate_wrapper"></div>
+<script>window.gtranslateSettings = {"default_language":"en","languages":["en","fr","de","it","es"],"wrapper_selector":".gtranslate_wrapper","horizontal_position":"right","vertical_position":"top"}</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/popup.js" defer></script>
   <div class="wrapper">
     <section class="chat-area">
-      <header style="display: flex; justify-content: space-between;">
+      <header style="  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e6e6e6;
+  justify-content: space-between;">
         <?php
         // Evitar inyección de SQL usando mysqli_prepare
         $user_id = mysqli_real_escape_string($conn, $_GET['user_id']);
         $topic_id = isset($_GET['topic_id'])? mysqli_real_escape_string($conn, $_GET['topic_id']) : null;
-        echo 'console.log('.$topic_id.')';
         $sql = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$user_id}");
         if (mysqli_num_rows($sql) > 0) {
           $row = mysqli_fetch_assoc($sql);
@@ -57,22 +47,16 @@ div#gt_float_wrapper {transform: scale(0.8);}
             <span style="display: block;"><?php echo htmlspecialchars($row['fname'] . " " . $row['lname']); ?></span>
             <p style="display: block;"><?php echo htmlspecialchars($row['status']); ?></p>
           </div>
+
+          </div>
+          <div class="userInfo" style="display: flex;justify-content: center;align-items: center;">
+            <img src="resource/info.png" alt="infor" id="informactionUser" class="admin-img" style="
+    width: 64px;
+    height: 64px;
+">
         </div>
 
-        <!-- Agregar estilo en línea para el contenedor de traducción -->
-        <div>
-        <div class="gtranslate_wrapper"></div>
-        </div>
 
-        <script>
-          window.gtranslateSettings = {
-            "default_language": "es",
-            "languages": ["es", "en", "sw", "xh"],
-            "wrapper_selector": ".gtranslate_wrapper",
-            "switcher_horizontal_position": "inline",
-          };
-        </script>
-        <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
       </header>
 
 

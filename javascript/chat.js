@@ -21,7 +21,7 @@ inputField.onkeyup = () => {
   } else {
     sendBtn.classList.remove("active");
     //si ha selecionado un file tambien se active
-    if(adjuntarBtn.style.display == 'inline'){
+    if (adjuntarBtn.style.display == 'inline') {
       sendBtn.classList.add("active");
     }
   }
@@ -35,7 +35,7 @@ sendBtn.onclick = () => {
     xhr.onload = () => {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
-          console.log( "response"+xhr.responseText);
+          console.log("response" + xhr.responseText);
           getMessages();
           inputField.value = "";
           scrollToBottom();
@@ -47,7 +47,7 @@ sendBtn.onclick = () => {
           .catch((error) => {
             console.error("La solicitud falló con el siguiente error:", error);
           });*/
-        
+
         }
       }
     }
@@ -84,8 +84,8 @@ chatBox.onmouseleave = () => {
   chatBox.classList.remove("active");
 }
 
-setInterval(() =>{
-    getMessages();
+setInterval(() => {
+  getMessages();
 }, 1000);
 //getMessages();
 
@@ -96,7 +96,7 @@ function getMessages() {
     if (xhr.readyState === XMLHttpRequest.DONE) {
       if (xhr.status === 200) {
         let data = xhr.response;
-        if(data!=""){
+        if (data != "") {
           chatBox.innerHTML = data;
           scrollToBottom();
         }
@@ -195,45 +195,45 @@ videoLlamadaBtn.addEventListener('click', function () {
       console.log("Apellido actual:", apellidoActual);
       codigoUsuario = nombreActual + apellidoActual;
       console.log("Codigo de Usuario actualizado:", codigoUsuario);
-    
-    console.log("Codigo de Usuario fuera actualizado:", codigoUsuario);
 
-  var fechaHoraActual = new Date();
+      console.log("Codigo de Usuario fuera actualizado:", codigoUsuario);
 
-  var anio = fechaHoraActual.getFullYear();
-  var mes = fechaHoraActual.getMonth() + 1; 
-  var dia = fechaHoraActual.getDate();
-  var horas = fechaHoraActual.getHours();
-  var minutos = fechaHoraActual.getMinutes();
-  var segundos = fechaHoraActual.getSeconds();
+      var fechaHoraActual = new Date();
 
-  mes = mes < 10 ? "0" + mes : mes;
-  dia = dia < 10 ? "0" + dia : dia;
-  horas = horas < 10 ? "0" + horas : horas;
-  minutos = minutos < 10 ? "0" + minutos : minutos;
-  segundos = segundos < 10 ? "0" + segundos : segundos;
+      var anio = fechaHoraActual.getFullYear();
+      var mes = fechaHoraActual.getMonth() + 1;
+      var dia = fechaHoraActual.getDate();
+      var horas = fechaHoraActual.getHours();
+      var minutos = fechaHoraActual.getMinutes();
+      var segundos = fechaHoraActual.getSeconds();
 
-  var fechaHoraFormateada = "" + anio + mes + dia + horas + minutos + segundos;
+      mes = mes < 10 ? "0" + mes : mes;
+      dia = dia < 10 ? "0" + dia : dia;
+      horas = horas < 10 ? "0" + horas : horas;
+      minutos = minutos < 10 ? "0" + minutos : minutos;
+      segundos = segundos < 10 ? "0" + segundos : segundos;
 
-  var enlaceVideollamada = "https://meet.jit.si/" + codigoUsuario + fechaHoraFormateada;
-  Swal.fire({
-    title: "Enlace de videollamada",
-    imageHeight: '300px',
-    imageWidth: 'auto',
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Enviar enlace de videollamada"
-  }).then((result) => {
-    if (result.isConfirmed) {
-      enviarVideoLlamada(enlaceVideollamada);
-    }
-  })
-})
-.catch(error => {
-  // Manejar errores si ocurre un problema al obtener los detalles del usuario
-  console.error(error);
-});
+      var fechaHoraFormateada = "" + anio + mes + dia + horas + minutos + segundos;
+
+      var enlaceVideollamada = "https://meet.jit.si/" + codigoUsuario + fechaHoraFormateada;
+      Swal.fire({
+        title: "Enlace de videollamada",
+        imageHeight: '300px',
+        imageWidth: 'auto',
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Enviar enlace de videollamada"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          enviarVideoLlamada(enlaceVideollamada);
+        }
+      })
+    })
+    .catch(error => {
+      // Manejar errores si ocurre un problema al obtener los detalles del usuario
+      console.error(error);
+    });
 
 })
 
@@ -275,27 +275,27 @@ function showImageMessage() {
 function enviarVideoLlamada(enlace) {
   // Realizar una solicitud para enviar el enlace de videollamada al servidor
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "php/send-video-call.php?incoming_id=" + incoming_id , true);
+  xhr.open("POST", "php/send-video-call.php?incoming_id=" + incoming_id, true);
   xhr.setRequestHeader("Content-Type", "application/json");
 
   // Datos a enviar al servidor
   var data = {
-      enlaceVideollamada: enlace,
-      incoming_id: incoming_id,
+    enlaceVideollamada: enlace,
+    incoming_id: incoming_id,
   };
   console.log(data);
 
   xhr.onreadystatechange = function () {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-              console.log("Enlace de videollamada enviado correctamente.");
-              console.log(xhr.responseText);
-          } else {
-              console.error("Error al enviar el enlace de videollamada.");
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        console.log("Enlace de videollamada enviado correctamente.");
+        console.log(xhr.responseText);
+      } else {
+        console.error("Error al enviar el enlace de videollamada.");
 
 
-          }
       }
+    }
   };
 
   // Convertir el objeto de datos a formato JSON y enviarlo
@@ -310,7 +310,7 @@ function getDetailUser() {
     xhr.open('GET', 'php/detail-user.php', true);
 
     // Definir el manejador de eventos para la carga
-    xhr.onload = function() {
+    xhr.onload = function () {
       if (xhr.status >= 200 && xhr.status < 300) {
         // Procesar la respuesta del servidor PHP
         const userData = JSON.parse(xhr.responseText);
@@ -318,10 +318,10 @@ function getDetailUser() {
       } else {
         reject('Error al obtener los detalles del usuario: ' + xhr.statusText);
       }
-    };    
+    };
 
     // Definir el manejador de eventos para los errores de red
-    xhr.onerror = function() {
+    xhr.onerror = function () {
       reject('Error de red al obtener los detalles del usuario.');
     };
 
@@ -329,3 +329,51 @@ function getDetailUser() {
     xhr.send();
   });
 }
+
+
+document.getElementById("informactionUser").addEventListener("click", function () {
+  // Obtener el unique_id del usuario (puedes obtenerlo de una manera específica)
+  let uniqueId = incoming_id; // Asegúrate de tener el valor correcto de incoming_id
+
+  // Realizar la solicitud AJAX
+  fetch('php/user-detail.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `unique_id=${uniqueId}`
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data) {
+        let htmlContent = `<p><strong>Nombre:</strong> ${data.fname} ${data.lname}</p>
+        <p><strong>Email:</strong> ${data.email}</p>`;
+        if (data.localizacion !== null) {
+          htmlContent += `<p><strong>Localización:</strong> ${data.localizacion}</p>`;
+        }
+        if (data.img) {
+          htmlContent += `<img src="${data.img}">`;
+        }
+        // Mostrar SweetAlert con la información del usuario
+        Swal.fire({
+          title: 'Información del Usuario',
+          html: htmlContent,
+          icon: 'info'
+        });
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo obtener la información del usuario.',
+          icon: 'error'
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema con la solicitud.',
+        icon: 'error'
+      });
+    });
+});

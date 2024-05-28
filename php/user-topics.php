@@ -115,6 +115,20 @@ function getTopicsData($userId) {
     $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
     $stmt->execute();
     $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($topics as $key => &$topic) {
+        if (strpos($topic['img'], 'php/') === 0) {
+            // Si la imagen comienza con 'php/', la mostramos como una imagen simple
+            $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
+        } else if (strpos($topic['img'], 'letra/') === 0) {
+            // Si la imagen comienza con 'letra/', la dividimos y mostramos como un círculo con la letra y color
+            $cadena = substr($topic['img'], 6); // Corta la parte "letra/" y toma el resto
+            $subarray = explode("/", $cadena);
+            $topic['img'] = '<div class="circulo" style="cursor: pointer; height: 64px; width: 64px; background: ' . $subarray[1] . '"><span class="letra">' . $subarray[0] . '</span></div>';
+        } else {
+            // De lo contrario, mostramos la imagen como una imagen simple
+            $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
+        }
+    }
     return $topics;
 }
 

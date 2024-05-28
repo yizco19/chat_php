@@ -118,3 +118,5 @@ CREATE TABLE user_topics (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (topic_id) REFERENCES topic(id) ON DELETE CASCADE
 );
+
+ALTER TABLE users ADD COLUMN localizacion VARCHAR(255);
