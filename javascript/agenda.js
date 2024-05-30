@@ -101,8 +101,9 @@ function seleccionarAdmin(topicId) {
                     console.log(data);
                     var adminsHtml = '<div class="swal2-content">';
                     data.forEach(function(user) {
-                        adminsHtml += '<div class="admin-row" data-id="'+user.unique_id+'"><p style="cursor: pointer;">' + user.lname  + '</p><img </div>';
+                        adminsHtml += '<div class="admin-row" data-id="'+user.unique_id+'"><p style="cursor: pointer;">' + user.lname  + '</p>';
                         adminsHtml += '<img src="' + user.img + '" alt="' + user.lname + '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" />';
+                        adminsHtml += '</div>';
                     });
                     adminsHtml += '</div>';
 

@@ -57,7 +57,6 @@ function sendTokenToServer(currentToken) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 let data = xhr.response;
-                console.log(data);
             } else {
                 console.error('Failed to send token to server.');
             }

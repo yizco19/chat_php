@@ -120,3 +120,21 @@ CREATE TABLE user_topics (
 );
 
 ALTER TABLE users ADD COLUMN localizacion VARCHAR(255);
+
+SELECT t.*, m.msg,  u.fname, u.lname, u.img, u.unique_id
+            FROM topic t
+            JOIN (
+                SELECT m.*
+                FROM messages m
+                INNER JOIN (
+                    SELECT incoming_msg_id , outgoing_msg_id, MAX(created_at) AS max_created_at
+                    FROM messages
+                    WHERE (outgoing_msg_id = :unique_id OR incoming_msg_id = :unique_id) AND topic_id IS NOT NULL
+                    GROUP BY topic_id
+                ) max_dates ON m.incoming_msg_id = max_dates.incoming_msg_id AND m.created_at = max_dates.max_created_at
+            ) m ON t.id = m.topic_id
+            JOIN users u ON m.incoming_msg_id = 
+       CASE 
+           WHEN m.incoming_msg_id = :unique_id THEN m.outgoing_msg_id
+           ELSE u.unique_id 
+       END

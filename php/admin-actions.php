@@ -20,9 +20,44 @@ switch ($action) {
     case 'get_all':
         getAllAdmins();
         break;
+        case 'delete-user':
+            $userId = isset($_POST['unique_id']) ? $_POST['unique_id'] : '';
+            if ($userId != '' && $userId != 0 && $userId != null) {
+                deleteUser($userId);
+            } else {
+                echo json_encode(['error' => 'ID no proporcionado']);
+            }
+            break;
+        
     default:
-        echo json_encode(['error' => 'Acción no válida']);
+        echo json_encode(['error' => 'Accion no valida']);
         break;
+}
+function deleteUser($userId){
+    global $conn;
+
+    //Elimina todos los mensajes del usuario
+    $sql = mysqli_query($conn, "DELETE FROM messages WHERE incoming_msg_id = {$userId} OR outgoing_msg_id = {$userId}");
+    if($sql){
+        //Elimina todos los topics del usuario
+        $sql = mysqli_query($conn, "DELETE FROM user_topics WHERE user_id = {$userId}");
+        if($sql){
+            //Elimina el usuario de la base de datos
+            $sql = mysqli_query($conn, "DELETE FROM users WHERE unique_id = {$userId}");
+            if($sql){
+                echo "El usuario ha sido eliminado";
+            }else{
+                echo "Algo salió mal. ¡Inténtalo de nuevo!";
+            }
+        }else{
+            echo "Algo salió mal. ¡Inténtalo de nuevo!";
+        }
+    }else{
+
+        echo "Algo salió mal. ¡Inténtalo de nuevo!";
+    }
+
+
 }
 
 function activateAdmin() {

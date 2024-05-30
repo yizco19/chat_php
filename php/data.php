@@ -1,9 +1,14 @@
 <?php
+
 while ($row = mysqli_fetch_assoc($query)) {
+
     $super_admin =$_SESSION['is_super_admin'];
     $result = $row['msg'];
+    $topic_id= $row['topic_id'];
+
     if($result == ""){
         $result = "No hay mensajes";
+
     }
     if (strpos($result, "https://meet.jit.si/") === 0) {
         $result = "Enlace de videoconferencia";
@@ -57,30 +62,40 @@ while ($row = mysqli_fetch_assoc($query)) {
     ($outgoing_id == $row['unique_id']) ? $hid_me = "hide" : $hid_me = "";
 
     // Aplicamos el filtro solo si $filterUserNotMessage es verdadero
-    if ($filterUserNotMessage && $filter) {
+    if ($filterUserNotMessage && $filter ) {
        // $output .= '$filternot'.$filterUserNotMessage;
         //$output .= '%filter'. $filter;
+    
         continue;
     }
 
     // Agregamos el usuario al $output solo si no se aplica el filtro
-    $output .= '<a href="chat.php?user_id=' . $row['unique_id'] . '">
-                    <div class="content">
-                        <img src="' . $row['img'] . '" alt="">
-                        <div class="details">
-                            <span>' . $row['fname'] . " " . $row['lname'] . '</span>
-                            <p>' . $you . $msg . ' <span style="color: #1ce5e8;">' . $attachment . '</span> </p>
-                        </div>
-                    </div>
-                    <div class="last-message-time">' . $created_at . '</div>
-                    <div class="status-dot ' . $offline . '" style="margin-right:10px;"><i class="fas fa-circle"></i></div>';
-                    if ($super_admin == 1) {
-                        $output .= '<label class="switch">';
-                        $output .= '<input type="checkbox" class="toggle-switch" data-id="' . $row['user_id'] . '" ' . ($row['admin'] == 1 ? 'checked' : '') . '>';
-                        $output .= '<span class="slider round"></span>';
-                        $output .= '</label>';
-                    }
-                $output.='</a>';
+    $output .= '<a href="chat.php?user_id=' . $row['unique_id'];
 
+    if ($topic_id != 0 && $topic_id != null) {
+        $output .= '&topic_id=' . $row['topic_id'];
+    }
+
+    $output .= '" class="user_link" data-id="' . $row['unique_id'] . '">
+                        <div class="content">
+                            <img src="' . $row['img'] . '" alt="">
+                            <div class="details">
+                                <span>' . $row['fname'] . " " . $row['lname'] . '</span>
+                                <p>' . $you . $msg . ' <span style="color: #1ce5e8;">' . $attachment . '</span> </p>
+                            </div>
+                        </div>
+                        <div class="last-message-time">' . $created_at . '</div>
+                        <div class="status-dot ' . $offline . '" style="margin-right:10px;"><i class="fas fa-circle"></i></div>';
+    
+    if ($super_admin == 1) {
+        $output .= '<label class="switch">';
+        $output .= '<input type="checkbox" class="toggle-switch" data-id="' . $row['user_id'] . '" ' . ($row['admin'] == 1 ? 'checked' : '') . '>';
+        $output .= '<span class="slider round"></span>';
+        $output .= '</label>';
+        $output .= '<img src="resource/delete.png" alt="delete" class="delete-user" data-id="' . $row['unique_id'] . '" />';
+    }
+    
+    $output .= '</a>';
+    
 
 }

@@ -19,6 +19,7 @@ if (!empty($email) && !empty($password)) {
                     setcookie('password', $password, time() + (86400 * 30), "/");
                 }
                 $_SESSION['unique_id'] = $row['unique_id'];
+                $_SESSION['user_id'] = $row['user_id'];
                 $_SESSION['admin'] = $row['admin'];
                 $_SESSION['username'] = $row['fname'] . " " . $row['lname'];
                 $_SESSION['email'] = $row['email'];

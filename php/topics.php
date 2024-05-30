@@ -10,29 +10,45 @@
             $stmt = $conn->query("SELECT * FROM topic");
             $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $topics;
-        }
+            }
         function getContactList(){
             $conn = connect();
             $unique_id = $_SESSION['unique_id'];
-            $sql = "SELECT t.*, m.msg, u.fname, u.lname,u.unique_id
-                    FROM topic t
-                    JOIN (
-                        SELECT m.*
-                        FROM messages m
-                        INNER JOIN (
-                            SELECT incoming_msg_id, MAX(created_at) AS max_created_at
-                            FROM messages
-                            WHERE outgoing_msg_id = :unique_id AND topic_id IS NOT NULL
-                            GROUP BY topic_id
-                        ) max_dates ON m.incoming_msg_id = max_dates.incoming_msg_id AND m.created_at = max_dates.max_created_at
-                    ) m ON t.id = m.topic_id
-                    JOIN users u ON m.incoming_msg_id = u.unique_id";
-        
+            /*$sql = "SELECT t.*, m.msg,  u.fname, u.lname, u.img, u.unique_id
+            FROM topic t
+            JOIN (
+                SELECT m.*
+                FROM messages m
+                INNER JOIN (
+                    SELECT incoming_msg_id , outgoing_msg_id, MAX(created_at) AS max_created_at
+                    FROM messages
+                    WHERE (outgoing_msg_id = :unique_id OR incoming_msg_id = :unique_id) AND topic_id IS NOT NULL
+                    GROUP BY topic_id
+                ) max_dates ON m.incoming_msg_id = max_dates.incoming_msg_id AND m.created_at = max_dates.max_created_at
+            ) m ON t.id = m.topic_id
+            JOIN users u ON m.incoming_msg_id = 
+       CASE 
+           WHEN m.incoming_msg_id = :unique_id THEN m.outgoing_msg_id
+           ELSE u.unique_id 
+       END";*/
+        $sql =" select t.* from topic t where t.id in (select topic_id from messages where outgoing_msg_id = :unique_id or incoming_msg_id = :unique_id) ";
+
+            $admin = $_SESSION['admin'];
+
+                    if($admin == 1){
+                        $unique_id=$_SESSION['user_id'];
+                        $sql = "SELECT t.*
+                        FROM topic t
+                        JOIN user_topics ut ON t.id = ut.topic_id
+                        WHERE ut.user_id = :unique_id";
+                    }
+            
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':unique_id', $unique_id);
             $stmt->execute();
             $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $output = "";;
+            $output = "";
+            
 
             if(count($topics) == 0){
                 $output .= "No Tiene topics";
@@ -42,7 +58,6 @@
             echo $output;
         }
         
-
 
         function insertTopic($name, $img,$letra) {
             if($letra==false){

@@ -5,15 +5,22 @@ foreach ($topics as $topic) {
     $topicId = $topic['id'];
     $topicName = $topic['name'];
     $topicImg = $topic['img'];
-    $message = $topic['msg'];
-    $unique_id = $topic['unique_id'];
-    $firstName = $topic['fname'];
-    $lastName = $topic['lname'];
+    //$message = $topic['msg'];
+    $admin = $_SESSION['admin'];
+
+    //$firstName = $topic['fname'];
+    //$lastName = $topic['lname'];
     //$userImg = $topic['img'];
 
     // Ahora puedes mostrar esta información como desees, por ejemplo:
-        $output.= '<div class="topic">';
-        $output.= '<a href="chat.php?topic_id='. $topicId. '&user_id='.$unique_id.' " >';
+        $output.= '<div class="topic" data-id="'.$topicId.'">';
+        $output.= '<a ';
+        
+        /*if($admin ==0){
+            $unique_id = $topic['unique_id'];
+            $output.= 'href="chat.php?topic_id='. $topicId. '&user_id='.$unique_id.' "' ;
+        }*/
+        $output.='>';
          if (strpos($topicImg, 'php/') === 0) {
             // Si la imagen comienza con 'php/', la mostramos como una imagen simple
         $output.= '<img src="' . $topicImg . '" alt="' . $topic['name'] . '" style=" height: 64px; width: 64px;" /> ';

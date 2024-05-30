@@ -404,3 +404,33 @@ function editarImagen(nuevaImagen) {
   // Enviar la solicitud con los datos de FormData en el cuerpo
   xhr.send(formData);
 }
+
+$(document).ready(function() {
+  $(document).on('click', '.topic', function (event) {
+    var topicId = $(this).data('id'); // Obtener el data-id en lugar del id
+    let searchTerm = searchBar.value;
+    let sortDirection = document.getElementById("sortSelect").value; // Obtener la dirección de ordenamiento
+    if (searchTerm != "") {
+      searchBar.classList.add("active");
+    } else {
+      searchBar.classList.remove("active");
+    }
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "php/search.php", true);
+    xhr.onload = () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          let data = xhr.response;
+          usersList.innerHTML = data;
+        }
+      }
+    };
+  
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    const filterCheckbox = document.getElementById('filterCheckboxInput'); // Obtener el elemento del checkbox
+    xhr.send("searchTerm=" + searchTerm + "&filterUserNotMessage=" + filterCheckbox.checked + "&sortDirection=" + sortDirection +"&topic_id=" +topicId ); // Agregar el parámetro para la dirección de ordenamiento
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+  });
+});

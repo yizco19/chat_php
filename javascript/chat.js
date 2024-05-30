@@ -352,7 +352,7 @@ document.getElementById("informactionUser").addEventListener("click", function (
           htmlContent += `<p><strong>Localización:</strong> ${data.localizacion}</p>`;
         }
         if (data.img) {
-          htmlContent += `<img src="${data.img}">`;
+          htmlContent += `<img src="${data.img}" style="    width: 300px;"> `;
         }
         // Mostrar SweetAlert con la información del usuario
         Swal.fire({

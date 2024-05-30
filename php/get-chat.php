@@ -110,8 +110,11 @@ $query = mysqli_query($conn, $sql);
 $inicio = "https://meet.jit.si/";
 
 if ($query) {
+
   if (mysqli_num_rows($query) > 0) {
+
       while ($row = mysqli_fetch_assoc($query)) {
+
           $adjunto = $row['attachment'];
           $es_imagen = false;
           $extensiones_permitidas = array('jpg', 'jpeg', 'png', 'gif');
@@ -121,6 +124,7 @@ if ($query) {
           }
           if($row['msg']!=null && $row['msg']!=" "){
               $message = '<p>' . $row['msg'] . '</p>';
+
           }else{
               $message = "";
           }
@@ -138,9 +142,9 @@ if ($query) {
       
 
           if(strpos($row['msg'], $inicio) === 0) {
-              $message = '<a href="' . htmlspecialchars($row['msg']) . '" style="width: 100px;"> <i class="fas fa-video" style="color: #990033;"></i> click</a>';
+              $message = '<a href="' . htmlspecialchars($row['msg']) . '" style="width: 100px;" > <i class="fas fa-video" style="color: #990033;"></i> click</a>';
 
-          }
+          }        
 
           // verifica si el mensaje es un enlace de videollamada
           if ($row['outgoing_msg_id'] === $outgoing_id) {
@@ -162,7 +166,7 @@ if ($query) {
           } else {
               $output .= '<div class="chat incoming">
 
-                              <img src="php/images/' . $row['img'] . '" alt="" class="profile-image">
+                              <img src="' . $row['img'] . '" alt="" class="profile-image">
                               <div class="details">
                               ' . $message.'                  ' ;
           }
@@ -179,7 +183,7 @@ if ($query) {
 
           $output .= '</div>';
 
-          $output .= '</div>';
+          $output .= '</div>';    
       }
   } else {
       $output .= '';
