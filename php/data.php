@@ -1,7 +1,9 @@
 <?php
 
-while ($row = mysqli_fetch_assoc($query)) {
 
+include_once "functions.php";
+//while ($row = mysqli_fetch_assoc($query)) {
+foreach ($array_data as $row) {
     $super_admin =$_SESSION['is_super_admin'];
     $result = $row['msg'];
     $topic_id= $row['topic_id'];
@@ -25,7 +27,7 @@ while ($row = mysqli_fetch_assoc($query)) {
     }
 
     if (isset($row['outgoing_msg_id'])) {
-        ($outgoing_id == $row['outgoing_msg_id']) ? $you = "Tu: " : $you = "";
+        ($unique_id == $row['outgoing_msg_id']) ? $you = "Tu: " : $you = "";
     } else {
         $you = "";
     }
@@ -55,13 +57,16 @@ while ($row = mysqli_fetch_assoc($query)) {
     } else {
         // Si created_at es null, establecemos un valor predeterminado
         $created_at = "";
+        if($msg == "No hay mensajes"){
         $filter = true; // Establecemos $filter como verdadero si no hay fecha de creación
+        }
     }
 
     ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
-    ($outgoing_id == $row['unique_id']) ? $hid_me = "hide" : $hid_me = "";
+    ($unique_id == $row['unique_id']) ? $hid_me = "hide" : $hid_me = "";
 
     // Aplicamos el filtro solo si $filterUserNotMessage es verdadero
+    //echo "filter'. $filter";
     if ($filterUserNotMessage && $filter ) {
        // $output .= '$filternot'.$filterUserNotMessage;
         //$output .= '%filter'. $filter;
@@ -77,8 +82,12 @@ while ($row = mysqli_fetch_assoc($query)) {
     }
 
     $output .= '" class="user_link" data-id="' . $row['unique_id'] . '">
-                        <div class="content">
-                            <img src="' . $row['img'] . '" alt="">
+
+                        <div class="content">';
+                        if ($topic_id != 0 && $topic_id != null) {
+                            $output .= getImgById($topic_id);
+                        }
+                        $output.='    <img src="' . $row['img'] . '" alt="">
                             <div class="details">
                                 <span>' . $row['fname'] . " " . $row['lname'] . '</span>
                                 <p>' . $you . $msg . ' <span style="color: #1ce5e8;">' . $attachment . '</span> </p>
@@ -99,3 +108,4 @@ while ($row = mysqli_fetch_assoc($query)) {
     
 
 }
+

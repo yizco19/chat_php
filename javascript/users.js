@@ -13,6 +13,8 @@ searchIcon.onclick = ()=>{
 }
 // Obtener elementos del DOM
 const filterIcon = document.getElementById('filterIcon');
+const resetIcon = document.getElementById('resetIcon');
+const userIcon = document.getElementById('userIcon');
 const modal = document.getElementById('myModal');
 const closeModal = document.getElementsByClassName('close')[0];
 
@@ -20,7 +22,13 @@ const closeModal = document.getElementsByClassName('close')[0];
 filterIcon.addEventListener('click', () => {
   modal.style.display = 'block';
 });
+resetIcon.addEventListener('click', () => {
+  getUsers();
 
+});
+userIcon.addEventListener('click', () => {
+  realizarBusqueda(1);
+});
 // Cerrar el modal al hacer clic en el botón de cerrar
 closeModal.addEventListener('click', () => {
   modal.style.display = 'none';
@@ -41,29 +49,27 @@ searchBar.onkeyup = ()=>{
 }
 
 
-function realizarBusqueda() {
-  let searchTerm = searchBar.value;
-  let sortDirection = document.getElementById("sortSelect").value; // Obtener la dirección de ordenamiento
-  if (searchTerm != "") {
-    searchBar.classList.add("active");
-  } else {
-    searchBar.classList.remove("active");
+function realizarBusqueda(user) {
+  if (user === undefined) {
+    user = 0;
   }
-  let xhr = new XMLHttpRequest();
+  const searchTerm = searchBar.value;
+  const sortDirection = document.getElementById("sortSelect").value;
+  searchBar.classList.toggle("active", searchTerm !== "");
+  const xhr = new XMLHttpRequest();
   xhr.open("POST", "php/search.php", true);
   xhr.onload = () => {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        let data = xhr.response;
-        usersList.innerHTML = data;
-      }
+    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+      usersList.innerHTML = xhr.response;
     }
   };
 
+
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  const filterCheckbox = document.getElementById('filterCheckboxInput'); // Obtener el elemento del checkbox
-  xhr.send("searchTerm=" + searchTerm + "&filterUserNotMessage=" + filterCheckbox.checked + "&sortDirection=" + sortDirection); // Agregar el parámetro para la dirección de ordenamiento
+  const filterCheckbox = document.getElementById('filterCheckboxInput');
+  xhr.send(`searchTerm=${searchTerm}&filterUserNotMessage=${filterCheckbox.checked}&sortDirection=${sortDirection}&showUserOnly=${user}`);
 }
+
 
 /*setInterval(() =>{
   let xhr = new XMLHttpRequest();
@@ -87,23 +93,18 @@ getUsers();
 
 
 
-  function getUsers() {
-    let xhr = new XMLHttpRequest();
-    let filterCheckbox = document.getElementById('filterCheckboxInput');
-    let url = "php/users.php?filterUserNotMessage=" + filterCheckbox.checked;
-    xhr.open("GET", url, true);
-    xhr.onload = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          let data = xhr.response;
-          if (!searchBar.classList.contains("active")) {
-            usersList.innerHTML = data;
-          }
-        }
-      }
-    };
-    xhr.send();
-  }
+function getUsers() {
+  let xhr = new XMLHttpRequest();
+  const filterCheckbox = document.getElementById('filterCheckboxInput');
+  
+  xhr.open("GET", `php/users.php?filterUserNotMessage=${filterCheckbox.checked}`, true);
+  xhr.onload = () => {
+    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200 && !searchBar.classList.contains("active")) {
+      usersList.innerHTML = xhr.response;
+    }
+  };
+  xhr.send();
+}
 
 
 // Función para mostrar el cuadro de diálogo de SweetAlert con el correo electrónico actual
@@ -428,7 +429,7 @@ $(document).ready(function() {
   
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     const filterCheckbox = document.getElementById('filterCheckboxInput'); // Obtener el elemento del checkbox
-    xhr.send("searchTerm=" + searchTerm + "&filterUserNotMessage=" + filterCheckbox.checked + "&sortDirection=" + sortDirection +"&topic_id=" +topicId ); // Agregar el parámetro para la dirección de ordenamiento
+    xhr.send("searchTerm=" + searchTerm + "&filterUserNotMessage=" + filterCheckbox.checked + "&sortDirection=" + sortDirection +"&topic_id=" +topicId + "&showUserOnly=1" );
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();

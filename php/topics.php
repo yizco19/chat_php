@@ -7,7 +7,10 @@
     require_once 'functions.php';
         function getAllTopics() {
             $conn = connect();
-            $stmt = $conn->query("SELECT * FROM topic");
+            $stmt = $conn->query("SELECT t.*
+            FROM topic t
+            INNER JOIN user_topics ut ON t.id = ut.topic_id;
+            ");
             $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $topics;
             }

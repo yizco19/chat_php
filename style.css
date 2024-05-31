@@ -131,9 +131,6 @@ body{
 .form .link a{
   color: #333;
 }
-.form .link a:hover{
-  text-decoration: underline;
-}
 
 
 /* Users List CSS Start */
@@ -187,6 +184,8 @@ body{
   width: 0px;
 }
 .users-list a {
+  text-decoration: none; /* Quita el subrayado */
+  transition: all 0.3s ease; /* Transición suave */
   padding-top: 8px;
   padding-bottom: 10px;
   padding-left: 20px;
@@ -195,6 +194,18 @@ body{
   border-bottom: 1px solid #f1f1f1; /* Aquí establecemos el estilo del borde y su color */
   background-color: #f3f1f1;
   border-radius: 10px;
+}
+.users-list a:hover {
+  transform: scale(1.01); /* Aumenta ligeramente el tamaño del enlace */
+}
+
+.users-list a:hover::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 2px;
+  background: #0056b3;
+  transition: width 0.3s;
 }
 
 .users-list a:last-child{

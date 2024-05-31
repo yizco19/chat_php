@@ -41,6 +41,7 @@ switch ($action) {
         adminTopicsUpdate();
         break;
     case 'update':
+    
     case 'delete':
         deleteUserTopic();
         break;

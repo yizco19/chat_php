@@ -390,7 +390,9 @@
 
         <div class="search">
           <div class="options">
-            <i class="fas fa-filter" id="filterIcon" style="margin-right: 20px;"></i>
+            <i class="fas fa-filter" id="filterIcon" style="margin-right: 15px;"></i>
+            <i class="fa-solid fa-rotate-right" id="resetIcon" style="margin-right: 15px;"></i>
+            <i class="fa-solid fa-users" id="userIcon"></i>
             <?php if (
               isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 0
               && isset($_SESSION['admin']) && $_SESSION['admin'] == 0

@@ -39,6 +39,7 @@ CREATE TABLE `messages` (
   `is_sender` tinyint(1) NOT NULL,
   `is_seen` tinyint(1) NOT NULL,
   `seen_at` timestamp NULL DEFAULT NULL
+   `topic_id` INT,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -138,3 +139,11 @@ SELECT t.*, m.msg,  u.fname, u.lname, u.img, u.unique_id
            WHEN m.incoming_msg_id = :unique_id THEN m.outgoing_msg_id
            ELSE u.unique_id 
        END
+
+       SELECT m.*
+       FROM messages m
+       INNER JOIN (
+        SELECT incoming_msg_id , outgoing_msg_id, MAX(created_at) AS max_created_at
+        FROM messages
+        WHERE (outgoing_msg_id = :unique_id OR incoming_msg_id = :unique_id)
+        

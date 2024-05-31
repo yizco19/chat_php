@@ -115,6 +115,7 @@ function seleccionarAdmin(topicId) {
                     // Agregar eventos click a los elementos admin-row
                     $('.admin-row').click(function() {
                         var adminId = $(this).data('id');
+
                         iniciarChat(topicId, adminId);
                     });
                 },
@@ -137,5 +138,5 @@ function iniciarChat(topicId, adminId) {
     // Aquí puedes agregar el código para iniciar el chat con el topic y el administrador seleccionados
     //console.log('Iniciar chat con Topic ID:', topicId, 'y Admin ID:', adminId);
     //Swal.fire('Chat iniciado', `Chat iniciado con el Topic ID: ${topicId} y Admin ID: ${adminId}`, 'success');
-    location.href = 'chat.php?user_id=' + adminId + '&topic_id=' + topicId;
+    location.href = 'chat.php?topic_id=' + topicId + '&admin_id=' + adminId;
 }
