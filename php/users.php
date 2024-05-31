@@ -59,24 +59,45 @@
             $result_messages = mysqli_query($conn, $sql_messages);
             //echo $sql_messages.'<br>';
             $messages_data = $result_messages->fetch_all(MYSQLI_ASSOC);
+            $withMsg=false;
             foreach($messages_data as $msg_row){
                 //echo $msg_row['msg'].'<br>';
                 $array_data[] = array(
                     'admin' => $user_row['admin'],
-                    'msg' => $msg_row['msg'],
-                    'topic_id' => $msg_row['topic_id'],
-                    'attachment' => $msg_row['attachment'],
-                    'incoming_msg_id' => $msg_row['incoming_msg_id'],
-                    'outgoing_msg_id' => $msg_row['outgoing_msg_id'],
                     'status' => $user_row['status'],
                     'img' => $user_row['img'],
                     'unique_id' => $user_row['unique_id'],
                     'lname' => $user_row['lname'],
                     'fname' => $user_row['fname'],
                     'user_id' => $user_row['user_id'],
+                    'msg' => $msg_row['msg'],
+                    'topic_id' => $msg_row['topic_id'],
+                    'attachment' => $msg_row['attachment'],
+                    'incoming_msg_id' => $msg_row['incoming_msg_id'],
+                    'outgoing_msg_id' => $msg_row['outgoing_msg_id'],
+
                     'msg_id' => $msg_row['msg_id']
                 );
+                $withMsg=true;
             }
+            if(!$filterUserNotMessage && !$withMsg){
+                $array_data[] = array(
+                    'admin' => $user_row['admin'],
+                    'status' => $user_row['status'],
+                    'img' => $user_row['img'],
+                    'unique_id' => $user_row['unique_id'],
+                    'lname' => $user_row['lname'],
+                    'fname' => $user_row['fname'],
+                    'user_id' => $user_row['user_id'],
+                    'msg' => null,
+                    'topic_id' => null,
+                    'attachment' => null,
+                    'incoming_msg_id' => null,
+                    'outgoing_msg_id' => null,
+                    'msg_id' => null);
+
+            }
+
         }
         //ordenar el array por sortDirection
         if($sortDirection == "desc"){
