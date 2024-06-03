@@ -4,6 +4,8 @@
 include_once "functions.php";
 //while ($row = mysqli_fetch_assoc($query)) {
 foreach ($array_data as $row) {
+    //echo 'qweq';
+    echo $row['created_at'];
     $super_admin =$_SESSION['is_super_admin'];
     $result = $row['msg'];
     $topic_id= $row['topic_id'];
@@ -34,6 +36,7 @@ foreach ($array_data as $row) {
 
     // Comprobamos si created_at es diferente de null y si el día es hoy mostramos el tiempo, sino mostramos la fecha
     if (isset($row['created_at'])) {
+
         $created_at = $row['created_at'];
         $created_at_timestamp = strtotime($created_at);
         $today_date = date('Y-m-d');

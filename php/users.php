@@ -23,6 +23,9 @@
     
     // Convertir la variable $filterUserNotMessage a un valor booleano
     $filterUserNotMessage = filter_var($filterUserNotMessage, FILTER_VALIDATE_BOOLEAN);
+    if($admin == 0 && $super_admin == 0){
+        
+    }
 
     $sql_search = "(fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%')";
     $sql = "SELECT * FROM users WHERE NOT unique_id = {$unique_id} AND {$sql_search} ORDER BY user_id DESC";
@@ -70,6 +73,7 @@
                     'lname' => $user_row['lname'],
                     'fname' => $user_row['fname'],
                     'user_id' => $user_row['user_id'],
+                    'created_at' => $msg_row['created_at'],
                     'msg' => $msg_row['msg'],
                     'topic_id' => $msg_row['topic_id'],
                     'attachment' => $msg_row['attachment'],
@@ -112,6 +116,7 @@
         //filtro topic_id
         if($topic_id!= 0 && $topic_id!= null){
             $array_data = array_filter($array_data, function($a) use ($topic_id){
+                
                 return $a['topic_id'] == $topic_id;
             });
         }

@@ -23,6 +23,7 @@ navigator.serviceWorker.register("sw.js").then(registration => {
             sendTokenToServer(currentToken);
         } else {
             console.log('No registration token available. Request permission to generate one.');
+            requestNotificationPermission();
         }
     }).catch((err) => {
         console.error('An error occurred while retrieving token. ', err);
@@ -56,11 +57,16 @@ function sendTokenToServer(currentToken) {
     xhr.onload = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
-                let data = xhr.response;
+                console.log('Token sent to server successfully.');
             } else {
                 console.error('Failed to send token to server.');
             }
         }
     };
     xhr.send('token=' + encodeURIComponent(currentToken));
+}
+
+function handleToken(token) {
+    localStorage.setItem('token_push', token);
+    sendTokenToServer(token);
 }

@@ -73,7 +73,7 @@ function gestionarTopics() {
 function getUsers() {
     let xhr = new XMLHttpRequest();
     let filterCheckbox = document.getElementById('filterCheckboxInput');
-    let url = "php/users.php?filterUserNotMessage=" + filterCheckbox.checked;
+    let url = "php/users.php?filterUserNotMessage=" + filterCheckbox.checked + "&action=get_all";
     xhr.open("GET", url, true);
     xhr.onload = () => {
       if (xhr.readyState === XMLHttpRequest.DONE) {

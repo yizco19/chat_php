@@ -23,6 +23,7 @@ filterIcon.addEventListener('click', () => {
   modal.style.display = 'block';
 });
 resetIcon.addEventListener('click', () => {
+  filterCheckbox.checked=true;
   getUsers();
 
 });
@@ -64,7 +65,7 @@ function realizarBusqueda(user) {
     }
   };
 
-
+  console.log("user: " + user);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   const filterCheckbox = document.getElementById('filterCheckboxInput');
   xhr.send(`searchTerm=${searchTerm}&filterUserNotMessage=${filterCheckbox.checked}&sortDirection=${sortDirection}&showUserOnly=${user}`);
@@ -429,7 +430,7 @@ $(document).ready(function() {
   
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     const filterCheckbox = document.getElementById('filterCheckboxInput'); // Obtener el elemento del checkbox
-    xhr.send("searchTerm=" + searchTerm + "&filterUserNotMessage=" + filterCheckbox.checked + "&sortDirection=" + sortDirection +"&topic_id=" +topicId + "&showUserOnly=1" );
+    xhr.send("searchTerm=" + searchTerm + "&filterUserNotMessage=" + filterCheckbox.checked + "&sortDirection=" + sortDirection +"&topic_id=" +topicId + "&showUserOnly=0" );
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();

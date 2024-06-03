@@ -5,7 +5,8 @@
     $admin = $_SESSION['admin'];
     $super_admin = $_SESSION['is_super_admin'];
 // Aquí corregimos la forma de acceder al parámetro filterUserNotMessage
-$filterUserNotMessage = $_POST['filterUserNotMessage'] ?? false;
+    $showUserOnly = $_POST['showUserOnly'] ?? 0;
+$filterUserNotMessage = $_POST['filterUserNotMessage'] ?? 0;
 
 
     if(!isset($searchTerm)){
@@ -100,7 +101,16 @@ $filterUserNotMessage = $_POST['filterUserNotMessage'] ?? false;
             $array_data = array_filter($array_data, function($a) use ($admin){
                 return $a['admin'] !== $admin ;
             });
-        //filtro si es super admin o no
+
+            if($showUserOnly == 1){
+
+                $array_data = array_filter($array_data, function($a){
+
+                    return $a['topic_id'] == null  || $a['topic_id'] == 0;
+                });
+            };
+        //showUserOnly
+
             
         include_once "data.php";
     }
