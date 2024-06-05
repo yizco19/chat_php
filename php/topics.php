@@ -4,17 +4,18 @@
     if (true) {
         $action = isset($_GET['action']) ? $_GET['action'] : '';
 
-    require_once 'functions.php';
-        function getAllTopics() {
+        require_once 'functions.php';
+        function getAllTopics()
+        {
             $conn = connect();
             $stmt = $conn->query("SELECT t.*
-            FROM topic t
-            INNER JOIN user_topics ut ON t.id = ut.topic_id;
-            ");
+            FROM topic t");
             $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $topics;
-            }
-        function getContactList(){
+        }
+
+        function getContactList()
+        {
             $conn = connect();
             $unique_id = $_SESSION['unique_id'];
             /*$sql = "SELECT t.*, m.msg,  u.fname, u.lname, u.img, u.unique_id
@@ -34,39 +35,40 @@
            WHEN m.incoming_msg_id = :unique_id THEN m.outgoing_msg_id
            ELSE u.unique_id 
        END";*/
-        $sql =" select t.* from topic t where t.id in (select topic_id from messages where outgoing_msg_id = :unique_id or incoming_msg_id = :unique_id) ";
+            $sql = " select t.* from topic t where t.id in (select topic_id from messages where outgoing_msg_id = :unique_id or incoming_msg_id = :unique_id) ";
 
             $admin = $_SESSION['admin'];
 
-                    if($admin == 1){
-                        $unique_id=$_SESSION['user_id'];
-                        $sql = "SELECT t.*
+            if ($admin == 1) {
+                $unique_id = $_SESSION['user_id'];
+                $sql = "SELECT t.*
                         FROM topic t
                         JOIN user_topics ut ON t.id = ut.topic_id
                         WHERE ut.user_id = :unique_id";
-                    }
-            
+            }
+
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':unique_id', $unique_id);
             $stmt->execute();
             $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $output = "";
-            
 
-            if(count($topics) == 0){
+
+            if (count($topics) == 0) {
                 $output .= "No Tiene topics";
-            }elseif(count($topics) > 0){
+            } elseif (count($topics) > 0) {
                 include_once "data-topic.php";
             }
             echo $output;
         }
-        
 
-        function insertTopic($name, $img,$letra) {
-            if($letra==false){
-                $img_path = 'php/'. $img;
+
+        function insertTopic($name, $img, $letra)
+        {
+            if ($letra == false) {
+                $img_path = 'php/' . $img;
             }
-            $img_path='letra/'.$img;
+            $img_path = 'letra/' . $img;
             $conn = connect();
             $stmt = $conn->prepare("INSERT INTO topic (name, img) VALUES (:name, :img)");
             $stmt->bindParam(':name', $name);
@@ -75,8 +77,9 @@
             return $conn->lastInsertId();
         }
 
-        function updateTopic($id, $name, $img) {
-            $img_path = 'php/'. $img;
+        function updateTopic($id, $name, $img)
+        {
+            $img_path = 'php/' . $img;
             $conn = connect();
             $stmt = $conn->prepare("UPDATE topic SET name = :name, img = :img WHERE id = :id");
             $stmt->bindParam(':id', $id);
@@ -86,7 +89,8 @@
             return $stmt->rowCount();
         }
 
-        function deleteTopic($id) {
+        function deleteTopic($id)
+        {
             $conn = connect();
             $stmt = $conn->prepare("DELETE FROM topic WHERE id = :id");
             $stmt->bindParam(':id', $id);
@@ -111,7 +115,7 @@
                         $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
                     }
                 }
-                
+
                 echo json_encode($topics);
                 break;
             case 'get':
@@ -126,20 +130,20 @@
             case 'insert':
                 $name = isset($_POST['name']) ? $_POST['name'] : '';
                 //comprueba si img es un file o un letra de texto
-                
+
                 $img = isset($_FILES['img']) ? $_FILES['img'] : null;
                 // Manejar la carga del archivo
                 if ($img && $img['error'] == UPLOAD_ERR_OK) {
                     $img_nombre = basename($img['name']);
                     $ruta = "topics/" . $img_nombre;
                     move_uploaded_file($img['tmp_name'], $ruta);
-                    $insertedId = insertTopic($name, $ruta,false);
+                    $insertedId = insertTopic($name, $ruta, false);
                     echo json_encode(['message' => 'Nuevo tema insertado con ID: ' . $insertedId]);
                 } else {
-                    if(isset($_POST['img']) && $_POST['img']!= '' && $_POST['img']!= null && $_POST['img']!= 'null' ){
-                    
-                        $result = insertTopic($name, $_POST['img'],true);
-                        echo json_encode(['message' => 'Nuevo tema insertado con ID: '. $result]);
+                    if (isset($_POST['img']) && $_POST['img'] != '' && $_POST['img'] != null && $_POST['img'] != 'null') {
+
+                        $result = insertTopic($name, $_POST['img'], true);
+                        echo json_encode(['message' => 'Nuevo tema insertado con ID: ' . $result]);
                         exit;
                     }
                     echo json_encode(['error' => 'Error al subir la imagen']);
@@ -170,13 +174,14 @@
                     echo json_encode(['error' => 'ID no proporcionado']);
                 }
                 break;
-                
+
             case 'get-contact-list':
 
-                    getContactList();
-                    break;
-                    
-                
+                getContactList();
+                break;
+
+           
+
 
             default:
                 echo json_encode(['error' => 'Acción no válida']);

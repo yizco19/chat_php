@@ -149,7 +149,7 @@ body{
   object-fit: cover;
   border-radius: 50%;
 }
-.users header img{
+.users header .user-img{
   height: 50px;
   width: 50px;
 }
@@ -171,7 +171,7 @@ body{
   color: #fff;
   outline: none;
   border: none;
-  padding: 7px 15px;
+  padding: 4px 4px;
   text-decoration: none;
   border-radius: 5px;
   font-size: 17px;
@@ -457,10 +457,6 @@ body{
     margin-left: 0px;
   }
 
-  .users header img{
-    height: 45px;
-    width: 45px;
-  }
   .users header .logout{
     padding: 6px 10px;
     font-size: 16px;

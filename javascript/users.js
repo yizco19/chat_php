@@ -1,48 +1,16 @@
-const searchBar = document.querySelector(".search input"),
-searchIcon = document.querySelector(".search button"),
-usersList = document.querySelector(".users-list");
+  const searchBar = document.querySelector("#searchInput"),
+  searchIcon = document.querySelector("#search-button");
+  usersList = document.querySelector(".users-list");
 
-searchIcon.onclick = ()=>{
-  searchBar.classList.toggle("show");
-  searchIcon.classList.toggle("active");
-  searchBar.focus();
-  if(searchBar.classList.contains("active")){
-    searchBar.value = "";
-    searchBar.classList.remove("active");
+  searchIcon.onclick = ()=>{
+    searchBar.classList.toggle("show");
+    searchIcon.classList.toggle("active");
+    searchBar.focus();
+    if(searchBar.classList.contains("active")){
+      searchBar.value = "";
+      searchBar.classList.remove("active");
+    }
   }
-}
-// Obtener elementos del DOM
-const filterIcon = document.getElementById('filterIcon');
-const resetIcon = document.getElementById('resetIcon');
-const userIcon = document.getElementById('userIcon');
-const modal = document.getElementById('myModal');
-const closeModal = document.getElementsByClassName('close')[0];
-
-// Mostrar el modal al hacer clic en el icono de filtro
-filterIcon.addEventListener('click', () => {
-  modal.style.display = 'block';
-});
-resetIcon.addEventListener('click', () => {
-  filterCheckbox.checked=true;
-  getUsers();
-
-});
-userIcon.addEventListener('click', () => {
-  realizarBusqueda(1);
-});
-// Cerrar el modal al hacer clic en el botón de cerrar
-closeModal.addEventListener('click', () => {
-  modal.style.display = 'none';
-  realizarBusqueda();
-});
-
-// Cerrar el modal al hacer clic fuera del contenido del modal
-window.addEventListener('click', (event) => {
-  if (event.target === modal) {
-    modal.style.display = 'none';
-    realizarBusqueda();
-  }
-});
 
 
 searchBar.onkeyup = ()=>{
@@ -50,12 +18,19 @@ searchBar.onkeyup = ()=>{
 }
 
 
-function realizarBusqueda(user) {
-  if (user === undefined) {
-    user = 0;
+function   realizarBusqueda(sortDirection, hideUserNotMessage, showUserOnlyTopic){
+  //comprueba el parametro esta definido
+  if (typeof sortDirection === 'undefined') {
+    sortDirection = localStorage.getItem('sortDirection') || 'asc';
   }
+  if (typeof hideUserNotMessage === 'undefined') {
+    hideUserNotMessage = localStorage.getItem('hideUserNotMessage') || 'false';
+  }
+  if (typeof showUserOnlyTopic === 'undefined') {
+    showUserOnlyTopic = localStorage.getItem('showUserOnlyTopic') || 'false';
+  }
+
   const searchTerm = searchBar.value;
-  const sortDirection = document.getElementById("sortSelect").value;
   searchBar.classList.toggle("active", searchTerm !== "");
   const xhr = new XMLHttpRequest();
   xhr.open("POST", "php/search.php", true);
@@ -64,11 +39,9 @@ function realizarBusqueda(user) {
       usersList.innerHTML = xhr.response;
     }
   };
-
-  console.log("user: " + user);
+  console.log(sortDirection, hideUserNotMessage, showUserOnlyTopic,searchTerm);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  const filterCheckbox = document.getElementById('filterCheckboxInput');
-  xhr.send(`searchTerm=${searchTerm}&filterUserNotMessage=${filterCheckbox.checked}&sortDirection=${sortDirection}&showUserOnly=${user}`);
+  xhr.send(`searchTerm=${searchTerm}&filterUserNotMessage=${hideUserNotMessage}&sortDirection=${sortDirection}&showUserOnlyTopic=${showUserOnlyTopic}`);
 }
 
 
@@ -175,9 +148,11 @@ if (localStorage.getItem('nuevoColor')) {
   cambiarColorFondo(localStorage.getItem('nuevoColor'));
 }
 
-function cambiarColorFondo(color) {
+function editarColor(color) {
+  localStorage.setItem('nuevoColor', color);
   // Cambia el color de fondo del body
   document.body.style.backgroundColor = color;
+
 }
 
 
@@ -434,5 +409,109 @@ $(document).ready(function() {
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
+  });
+});
+function generarSwitch(id, label) {
+  //comprueba si en localStorage hay un valor para el switch
+  var checked = localStorage.getItem(id) === "true" ? "checked" : "";
+  return `
+    <div style="display: flex; align-items: center;">
+      <label class="switch" style="margin-right: 10px;">
+        <input type="checkbox" ${checked} id="${id}" >
+        <span class="slider round"></span>
+      </label>
+      <label for="${id}">${label}</label>
+    </div>`;
+}
+
+
+
+document.getElementById('settings').addEventListener('click', function() {
+  var style_cancel_button = "cursor: pointer; width: 28px; height: 28px;";
+  if(localStorage.getItem('nuevoColor')) {
+    var color = localStorage.getItem('nuevoColor');
+  }
+  // Mostrar la ventana de configuración
+  const settingshtml = `
+    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+      <img src="resource/marca-x.png" alt="Cancel" class="option-img" id="cancelButton" style="${style_cancel_button}">
+    </div>
+    ${generarSwitch('nameSwitch', 'Nombre y apellidos')}
+    <div style="display: flex; align-items: center;">
+      <input type="text" class="swal2-input" id="firstName" placeholder="Nombre" style="margin-right: 1px; width: 180px;">
+      <input type="text" class="swal2-input" id="lastName" placeholder="Apellido" style="width: 180px;">
+    </div>
+    ${generarSwitch('emailSwitch', 'Correo actual')}
+    <div>
+      <input type="text" id="email" class="swal2-input" placeholder="Correo">
+    </div>
+    ${generarSwitch('colorSwitch', 'Color')}
+    <div>
+      <input type="color" id="color" placeholder="Color" value="${color}">
+    </div>
+    ${generarSwitch('orderByDateSwitch', 'Ordenar por fecha')}
+    <div>
+      <div class="col-sm-10">
+        <select id="sortSelect" class="form-control">
+          <option value="asc">Ascendente</option>
+          <option value="desc">Descendente</option>
+        </select>
+      </div>
+    </div>
+    ${generarSwitch('hideUserNotMessage', 'Ocultar usuarios sin mensajes')}
+    ${generarSwitch('showUserOnlyTopic', 'Mostrar solo usuarios con tema')}
+  `;
+
+  Swal.fire({
+    html: settingshtml,
+    showConfirmButton: true,
+    confirmButtonText: 'Guardar Configuración', // Cambia el texto del botón de confirmación
+    confirmButtonColor: '#4caf50', // Cambia el color del botón de confirmación
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Implementa la lógica para guardar la configuración
+
+      const nameSwitch = document.getElementById('nameSwitch');
+      const emailSwitch = document.getElementById('emailSwitch');
+      const colorSwitch = document.getElementById('colorSwitch');
+      const orderByDateSwitch = document.getElementById('orderByDateSwitch');
+      const hideUserNotMessage = document.getElementById('hideUserNotMessage');
+      const showUserOnlyTopic = document.getElementById('showUserOnlyTopic');
+
+      if (nameSwitch.checked) {
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        editarNombre(firstName, lastName);
+      }
+
+      if (emailSwitch.checked) {
+        const email = document.getElementById('email').value;
+        editarEmail(email);
+      }
+
+      if (colorSwitch.checked) {
+        const color = document.getElementById('color').value;
+        editarColor(color);
+      }
+      
+      if (orderByDateSwitch.checked) {
+        const sortDirection = document.getElementById('sortSelect').value;
+        localStorage.setItem('orderByDate', sortDirection);
+      }else{
+        sortDirection ='asc';
+      }
+      
+      localStorage.setItem('hideUserNotMessage', hideUserNotMessage.checked);
+      localStorage.setItem('showUserOnlyTopic', showUserOnlyTopic.checked);
+
+      realizarBusqueda(sortDirection, hideUserNotMessage.checked, showUserOnlyTopic.checked);
+
+      // Cerrar la ventana
+      Swal.close();
+    }
+  });
+
+  document.getElementById('cancelButton').addEventListener('click', function() {
+    Swal.close();
   });
 });

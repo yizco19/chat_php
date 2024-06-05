@@ -121,9 +121,11 @@
             });
         }
         //filtro si es admin o no 
+        if($super_admin != 1){
             $array_data = array_filter($array_data, function($a) use ($admin){
                 return $a['admin'] !== $admin ;
             });
+        }
         //filtro si es super admin o no
             
         include_once "data.php";

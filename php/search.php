@@ -4,17 +4,11 @@
     $unique_id = $_SESSION['unique_id'];
     $admin = $_SESSION['admin'];
     $super_admin = $_SESSION['is_super_admin'];
-// Aquí corregimos la forma de acceder al parámetro filterUserNotMessage
-    $showUserOnly = $_POST['showUserOnly'] ?? 0;
-$filterUserNotMessage = $_POST['filterUserNotMessage'] ?? 0;
-
-
-    if(!isset($searchTerm)){
-        $searchTerm = "";
-    } else {
-        $searchTerm = mysqli_real_escape_string($conn, $_POST['searchTerm']);
-    }
-   
+    $filterUserNotMessage = isset($_POST['filterUserNotMessage']) ? mysqli_real_escape_string($conn, $_POST['filterUserNotMessage']) : false;
+    $sortDirection = isset($_POST['sortDirection']) ? mysqli_real_escape_string($conn, $_POST['sortDirection']) : "desc";
+    $showUserOnlyTopic = isset($_POST['showUserOnlyTopic']) ? mysqli_real_escape_string($conn, $_POST['showUserOnlyTopic']) : "";
+    $showUserOnlyTopic = filter_var($showUserOnlyTopic, FILTER_VALIDATE_BOOLEAN);
+    $searchTerm = isset($_POST['searchTerm']) ? mysqli_real_escape_string($conn, $_POST['searchTerm']) : "";
     if(!isset($sortDirection)){
         $sortDirection = "desc";
     } else {
@@ -26,6 +20,9 @@ $filterUserNotMessage = $_POST['filterUserNotMessage'] ?? 0;
     
     // Convertir la variable $filterUserNotMessage a un valor booleano
     $filterUserNotMessage = filter_var($filterUserNotMessage, FILTER_VALIDATE_BOOLEAN);
+    if($admin == 0 && $super_admin == 0){
+        
+    }
 
     $sql_search = "(fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%')";
     $sql = "SELECT * FROM users WHERE NOT unique_id = {$unique_id} AND {$sql_search} ORDER BY user_id DESC";
@@ -62,24 +59,46 @@ $filterUserNotMessage = $_POST['filterUserNotMessage'] ?? 0;
             $result_messages = mysqli_query($conn, $sql_messages);
             //echo $sql_messages.'<br>';
             $messages_data = $result_messages->fetch_all(MYSQLI_ASSOC);
+            $withMsg=false;
             foreach($messages_data as $msg_row){
                 //echo $msg_row['msg'].'<br>';
                 $array_data[] = array(
                     'admin' => $user_row['admin'],
-                    'msg' => $msg_row['msg'],
-                    'topic_id' => $msg_row['topic_id'],
-                    'attachment' => $msg_row['attachment'],
-                    'incoming_msg_id' => $msg_row['incoming_msg_id'],
-                    'outgoing_msg_id' => $msg_row['outgoing_msg_id'],
                     'status' => $user_row['status'],
                     'img' => $user_row['img'],
                     'unique_id' => $user_row['unique_id'],
                     'lname' => $user_row['lname'],
                     'fname' => $user_row['fname'],
                     'user_id' => $user_row['user_id'],
+                    'created_at' => $msg_row['created_at'],
+                    'msg' => $msg_row['msg'],
+                    'topic_id' => $msg_row['topic_id'],
+                    'attachment' => $msg_row['attachment'],
+                    'incoming_msg_id' => $msg_row['incoming_msg_id'],
+                    'outgoing_msg_id' => $msg_row['outgoing_msg_id'],
+
                     'msg_id' => $msg_row['msg_id']
                 );
+                $withMsg=true;
             }
+            if(!$filterUserNotMessage && !$withMsg){
+                $array_data[] = array(
+                    'admin' => $user_row['admin'],
+                    'status' => $user_row['status'],
+                    'img' => $user_row['img'],
+                    'unique_id' => $user_row['unique_id'],
+                    'lname' => $user_row['lname'],
+                    'fname' => $user_row['fname'],
+                    'user_id' => $user_row['user_id'],
+                    'msg' => null,
+                    'topic_id' => null,
+                    'attachment' => null,
+                    'incoming_msg_id' => null,
+                    'outgoing_msg_id' => null,
+                    'msg_id' => null);
+
+            }
+
         }
         //ordenar el array por sortDirection
         if($sortDirection == "desc"){
@@ -94,24 +113,23 @@ $filterUserNotMessage = $_POST['filterUserNotMessage'] ?? 0;
         //filtro topic_id
         if($topic_id!= 0 && $topic_id!= null){
             $array_data = array_filter($array_data, function($a) use ($topic_id){
+                
                 return $a['topic_id'] == $topic_id;
             });
         }
         //filtro si es admin o no 
+        if($super_admin != 1){
             $array_data = array_filter($array_data, function($a) use ($admin){
                 return $a['admin'] !== $admin ;
             });
+        }
 
-            if($showUserOnly == 1){
-
-                $array_data = array_filter($array_data, function($a){
-
-                    return $a['topic_id'] == null  || $a['topic_id'] == 0;
-                });
-            };
-        //showUserOnly
-
-            
+        if (($topic_id == 0 || $topic_id == null) && $showUserOnlyTopic) {
+            $array_data = array_filter($array_data, function($a) use ($showUserOnlyTopic) { 
+                return $a['topic_id'] !== null && $a['topic_id'] !== 0;
+            });
+        }
+        
         include_once "data.php";
     }
     echo $output;

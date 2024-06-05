@@ -1,19 +1,37 @@
-document.getElementById('agendaIcon').addEventListener('click', function() {
-    Swal.fire({
-        title: 'Seleccione una opción',
-        html: `
-            <div>
-                <img src="resource/user.png" alt="User" class="option-img" id="userOption" style="cursor: pointer; width: 100px; height: 100px; margin: 10px;">
-                <img src="resource/topic.png" alt="Topics" class="option-img" id="topicsOption" style="cursor: pointer; width: 100px; height: 100px; margin: 10px;">
+document.getElementById('add-user-topic').addEventListener('click', function() {
+    var style_box_agenda = "display: flex; flex-direction: column; align-items: center; margin: 10px; border: 6px solid gray; border-radius: 20px; padding: 10px;";
+    var style_cancel_button = "cursor: pointer; width: 28px; height: 28px;";
+    var style_option_img = "cursor: pointer; width: 100px; height: 100px;";
+    
+    var agendahtml = `
+        <div style="display: flex; flex-direction: column; align-items: flex-end;">
+            <img src="resource/marca-x.png" alt="Cancel" class="option-img" id="cancelButton" style="${style_cancel_button}">
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
+            <div style="${style_box_agenda}">
+                <img src="resource/nueva-cuenta.png" alt="User" class="option-img" id="userOption" style="${style_option_img}">
+                <span>Usuario</span>
             </div>
-        `,
+            <div style="${style_box_agenda}">
+                <img src="resource/red.png" alt="Topics" class="option-img" id="topicsOption" style="${style_option_img}">
+                <span>Otro Topic</span>
+            </div>
+        </div>
+    `;
+    
+    Swal.fire({
+        html: agendahtml
+       ,
         showConfirmButton: false
     });
-
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        Swal.close();
+    });
     document.getElementById('userOption').addEventListener('click', function() {
             const filterCheckbox = document.getElementById('filterCheckboxInput'); // Obtener el elemento del checkbox
             filterCheckbox.checked = false; // Desactivar el checkbox
             getUsers();
+            Swal.close();
     });
 
     document.getElementById('topicsOption').addEventListener('click', function() {

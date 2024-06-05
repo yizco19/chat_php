@@ -48,6 +48,16 @@ switch ($action) {
     case 'add':
         addUserTopic();
         break;
+        case 'get-admin-assigned-topics':
+            $topicId = isset($_GET['topic_id']) ? $_GET['topic_id'] : '';
+            if ($topicId) {
+                $user = getAdminAssignedTopics($topicId);
+                echo json_encode($user);
+            } else {
+                echo json_encode(['error' => 'ID de tema no proporcionado']);
+            }
+
+            break;
     default:
         echo json_encode(['error' => 'Acción no válida']);
         break;
@@ -84,6 +94,7 @@ function adminTopicsUpdate() {
 
     // si checked es verdadero, agregar el tema al usuario
     if ($checked) {
+
         $stmt = $conn->prepare("INSERT INTO user_topics (user_id, topic_id) VALUES (?, ?)");
         $stmt->bindValue(1, $userId, PDO::PARAM_INT);
         $stmt->bindValue(2, $topicId, PDO::PARAM_INT);
@@ -132,7 +143,20 @@ function getTopicsData($userId) {
     }
     return $topics;
 }
-
+function getAdminAssignedTopics($topicId)
+{
+    $conn = connect();
+    $topicId = intval($topicId);
+    $Query = "SELECT u.user_id,u.fname,u.lname,u.img,u.unique_id,ut.topic_id
+        FROM users u 
+        LEFT JOIN  user_topics ut ON
+             u.user_id = ut.user_id AND ut.topic_id = :topic_id";
+    $stmt = $conn->prepare($Query);
+    $stmt->bindParam(':topic_id', $topicId, PDO::PARAM_INT);
+    $stmt->execute();
+    $admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $admins;
+}
 function getUserTopics() {
     $conn = connect();
     $userId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;

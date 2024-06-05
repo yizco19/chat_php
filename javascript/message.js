@@ -15,6 +15,7 @@ const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
 navigator.serviceWorker.register("sw.js").then(registration => {
+    // Obtener el token de mensajería
     getToken(messaging, {
         serviceWorkerRegistration: registration,
         vapidKey: 'BJv91e372fmWnJxsvfn2ugTrpwmEpY1BIS5Luoqy86cFcf6weeLT-cY7Ux2CbiIa6tWQOCNcNxxUPcKAVhRNJTs'
@@ -35,8 +36,11 @@ navigator.serviceWorker.register("sw.js").then(registration => {
 });
 
 function requestNotificationPermission() {
+    // Verificar si estamos en Android o iOS
     if (typeof Android !== 'undefined') {
+        // Android: solicitar permiso de notificación
         Android.requestNotificationPermission();
+        // Esperar un tiempo antes de obtener el token de notificación del almacenamiento local
         setTimeout(function () {
             const token = localStorage.getItem('token_push');
             if (token) {
@@ -44,12 +48,17 @@ function requestNotificationPermission() {
             }
         }, 3000);
     } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.getToken) {
+        // iOS: enviar mensaje al controlador de mensajes para obtener el token
         window.webkit.messageHandlers.getToken.postMessage(null);
+        window.addEventListener('handleToken' , function (token) {
+            sendTokenToServer(token);
+        });
     } else {
         console.error('No interface available for requesting notification permission.');
     }
 }
 
+// Función para enviar el token al servidor
 function sendTokenToServer(currentToken) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', 'php/save-token.php');
@@ -64,9 +73,4 @@ function sendTokenToServer(currentToken) {
         }
     };
     xhr.send('token=' + encodeURIComponent(currentToken));
-}
-
-function handleToken(token) {
-    localStorage.setItem('token_push', token);
-    sendTokenToServer(token);
 }

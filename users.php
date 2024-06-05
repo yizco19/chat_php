@@ -49,14 +49,6 @@
     transition: all 0.2s ease;
   }
 
-  .users .search button.active {
-    background: #333;
-    color: #fff;
-  }
-
-  .search button.active i::before {
-    content: '\f00d';
-  }
 
   .filter-checkbox {
     display: none;
@@ -156,12 +148,6 @@
     cursor: pointer;
   }
 
-  .assign-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-left: 10px;
-  }
 
   .assign-img {
     width: 20px;
@@ -170,13 +156,15 @@
 
   /* Estilos generales para botones */
   .eliminar-btn,
-  .editar-btn {
+  .editar-btn,
+  .assign-btn {
+    margin-right: 1px;
     border: none;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 4px 4px;
     color: white;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     transition: background-color 0.3s, transform 0.3s;
   }
 
@@ -185,7 +173,14 @@
     background-color: #ff6961;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-
+  .assign-btn {
+    background-color: #77dd77;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .assign-btn:hover {
+    background-color: #6cd66c;
+    transform: translateY(-2px);
+  }
   .eliminar-btn:hover {
     background-color: #ff5c53;
     transform: translateY(-2px);
@@ -243,66 +238,137 @@
     text-align: center;
     font-size: 14px;
   }
+
   .topics-list {
-  overflow: hidden; /* Ocultar las barras de desplazamiento */
-  overflow-x: scroll;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  margin-bottom: 20px;
-  cursor: grab; /* Cambiar el cursor para indicar que se puede agarrar */
-}
+    overflow: hidden;
+    /* Ocultar las barras de desplazamiento */
+    overflow-x: scroll;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    cursor: grab;
+    /* Cambiar el cursor para indicar que se puede agarrar */
+  }
 
-/* Cambiar el cursor cuando se está desplazando */
-.topics-list:active {
-  cursor: grabbing;
-}
+  /* Cambiar el cursor cuando se está desplazando */
+  .topics-list:active {
+    cursor: grabbing;
+  }
 
-.topic {
-  padding: 10px 20px;
-  border-radius: 20px;
-  margin-right: 10px;
-  
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-}
+  .topic {
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-right: 10px;
 
-.topic:hover {
-  background-color: #ddd;
-  transform: translateY(-2px);
-}
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
 
-.topic:active {
-  background-color: #ccc;
-  transform: translateY(0);
-}
+  .topic:hover {
+    background-color: #ddd;
+    transform: translateY(-2px);
+  }
 
-  
+  .topic:active {
+    background-color: #ccc;
+    transform: translateY(0);
+  }
 
+  .opcion-img {
+    width: 35px;
+    height: auto;
+    border-radius: 0%;
+  }
+
+  header .search-button.active {
+    background: #333;
+    color: #fff;
+  }
+
+  .search button.active i::before {
+    content: '\f00d';
+  }
+
+  header #search-button {
+    position: relative;
+    z-index: 1;
+    width: 47px;
+    height: 42px;
+    font-size: 17px;
+    cursor: pointer;
+    border: none;
+    background: #fff;
+    color: #333;
+    outline: none;
+    border-radius: 0 5px 5px 0;
+    transition: all 0.2s ease;
+  }
+
+  #search-button.active img {
+    content: url('resource/marca-x.png');
+    display: inline-block;
+    /* Asegúrate de que el pseudo-elemento se muestre correctamente */
+
+    /* Otros estilos para posicionar la imagen */
+  }
+
+
+  #searchInput {
+    margin-left: 0px;
+    position: absolute;
+    height: 42px;
+
+    font-size: 16px;
+    padding: 0 13px;
+    border: 1px solid #e6e6e6;
+    outline: none;
+    border-radius: 5px 5px 5px 5px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+  }
+
+  #searchInput.show {
+    width: 100%;
+    position: relative;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 999;
+  }
+
+  .style-options-btn {
+    border: none;
+    background-color: transparent;
+
+  }
+  #profile-image{
+    width: 80px;
+  }
 </style>
 <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
   <style>
-      
-      .topic-row {
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-        margin-bottom: 10px;
-      }
-    
-      .topic-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
-    
-      .topic-name {
-        flex: 1;
-      }
-    </style>
-    <?php endif;?>
+    .topic-row {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .topic-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .topic-name {
+      flex: 1;
+    }
+  </style>
+<?php endif; ?>
+
 <body>
   <div class="wrapper">
     <section class="users">
@@ -319,130 +385,84 @@
           <script>
             const profileImage = document.getElementById('profile-image');
             profileImage.addEventListener('click', function() {
-              mostrarOpciones();
+              cambiarImagen();
             });
-
-            function mostrarOpciones() {
-              var viewOpciones = `<div class="swal2-actions">
-      <button id="cambiarNombre" onclick="cambiarNombre()" style="border: none; background: none;">
-        <img src="resource/cambiar_nombre.png">
-      </button>
-      <button id="cambiarImagen" onclick="cambiarImagen()" style="border: none; background: none;">
-        <img src="resource/cambiar_imagen.png">
-      </button>
-      <button id="cambiarEmail" onclick="cambiarEmail()" style="border: none; background: none;">
-        <img src="resource/mailing.png">
-      </button>
-      <button id="cambiarColorFondo" onclick="elegirColorFondo()" style="border: none; background: none;">
-        <img id="color-picker" src="resource/color-picker.png" style="cursor: pointer; height: 64px; width: 64px;">
-      </button>`;
-              <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
-                //agrega una button para gestionar adminstradores
-                viewOpciones += `<button id="gestionarTopics" onclick="gestionarTopics()" style="border: none; background: none;">
-        <img src="resource/topic.png" style="cursor: pointer; height: 64px; width: 64px;">
-      </button>`;
-              <?php endif; ?>
-
-              viewOpciones += `</div>`;
-
-              // Mostrar un cuadro de diálogo personalizado con cuatro opciones
-              Swal.fire({
-                title: 'Seleccione una opción:',
-                showCancelButton: true,
-                cancelButtonText: 'Cancelar',
-                html: viewOpciones
-              });
-            }
           </script>
+
           <div class="details">
             <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
-            <p><?php echo $row['status']; ?></p>
+
+            <a href="php/logout.php?logout_id=<?php echo $row['unique_id']; ?>" class="logout">
+              <span class="logout-text" style="font-size: 15px;">Cerrar Sesión</span>
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
           </div>
 
 
         </div>
-        <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
-          <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="resource/admins.png" alt="admins" id="gestionarAdminstradores" class="admin-img">
+       
+
+
+        <div>
+          <?php if (
+            isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 0
+            &&  isset($_SESSION['admin']) && $_SESSION['admin'] == 0
+          ) : ?>
+
+            <button id="add-user-topic" class="style-options-btn"><img src="resource/anadir.png" alt="logout" id="logout" class="opcion-img"style="border-radius:0%;"> </button>
+            <script src="javascript/agenda.js"></script>
+          <?php endif; ?>
+
+
+          <button id="search-button"> <img src="resource/lupa (2).png" alt="logout" id="logout" class="opcion-img" style="border-radius:0%;"></button>
+
+          <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
+          <button class="style-options-btn">
+            <img src="resource/red.png" alt="admins" id="gestionarTopics" onclick="gestionarTopics()"  class="opcion-img" style="border-radius:0%;">
             <script src="javascript/admins.js"></script>
             <link rel="stylesheet" type="text/css" href="css/admins.css">
-            <a href="php/logout.php?logout_id=<?php echo $row['unique_id']; ?>" class="logout">
-              <span class="logout-text">Cerrar Sesión</span>
-              <span class="fas fa-sign-out-alt"></span>
-            </a>
-          </div>
-        <?php else : ?>
-          <a href="php/logout.php?logout_id=<?php echo $row['unique_id']; ?>" class="logout">
-            <span class="logout-text">Cerrar Sesión</span>
-            <span class="fas fa-sign-out-alt"></span>
-          </a>
+
+            </button>
+
         <?php endif; ?>
-
-
+        <button id="settings" class="style-options-btn">
+            <img src="resource/ajuste.png" alt="logout" class="opcion-img" style="border-radius:0%;">
+          </button>
+        </div>
 
       </header>
+      <input type="text" placeholder="Buscar por nombre..." id="searchInput">
       <div class="topics-list">
-  <!-- Agrega más temas según sea necesario -->
-</div>
-<script src="javascript/topics.js"></script>
+
+        <!-- Agrega más temas según sea necesario -->
+      </div>
+
+      <script src="javascript/topics.js"></script>
 
       <div>
 
-        <div class="search">
-          <div class="options">
-            <i class="fas fa-filter" id="filterIcon" style="margin-right: 15px;"></i>
-            <i class="fa-solid fa-rotate-right" id="resetIcon" style="margin-right: 15px;"></i>
-            <i class="fa-solid fa-users" id="userIcon"></i>
-            <?php if (
-              isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 0
-              && isset($_SESSION['admin']) && $_SESSION['admin'] == 0
-            ) : ?>
-              <i class="fa-solid fa-address-book" id="agendaIcon"></i>
-              <script src="javascript/agenda.js"></script>
-              <style>
-                .option-img {
-                  width: 100px;
-                  height: 100px;
-                  cursor: pointer;
-                  margin: 10px;
-                  display: inline-block;
-                }
-
-                .option-img:hover {
-                  border: 2px solid #007BFF;
-                  border-radius: 10px;
-                }
-              </style>
-            <?php endif; ?>
-
-          </div>
-          <span class="text">Seleccione un usuario</span>
-          <input type="text" placeholder="Buscar por nombre...">
-          <button><i class="fas fa-search"></i></button>
-
-        </div>
 
         <div class="modal" id="myModal">
           <div class="modal-content">
             <span class="close">&times;</span>
             <div style="display: flex; flex-direction: column; align-items: center;">
-               
-            <div style="margin-bottom: 10px; display: flex; align-items: center;" id="filtroMensaje">
+
+              <div style="margin-bottom: 10px; display: flex; align-items: center;" id="filtroMensaje">
                 <label for="filterCheckboxInput" style="margin-right: 10px;">Mostrar solo usuarios con mensajes</label>
                 <input type="checkbox" id="filterCheckboxInput">
               </div>
-              <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 0): ?>
-    <script>
-        console.log('qweqweqe' + <?php echo $_SESSION['admin']; ?>);
-        let filterCheckbox = document.getElementById('filterCheckboxInput');
-        filterCheckbox.checked = true;
-    </script>
-    <style>
-      #filtroMensaje{
-        visibility: hidden;
-      }
-    </style>
-<?php endif; ?>
+              <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 0) : ?>
+                <script>
+                  console.log('qweqweqe' + <?php echo $_SESSION['admin']; ?>);
+                  let filterCheckbox = document.getElementById('filterCheckboxInput');
+                  filterCheckbox.checked = true;
+                </script>
+                <style>
+                  #filtroMensaje {
+                    visibility: hidden;
+                  }
+                </style>
+              <?php endif; ?>
 
               <div class="container mt-5">
                 <div class="form-group col">

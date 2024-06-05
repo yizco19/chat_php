@@ -5,7 +5,7 @@ include_once "functions.php";
 //while ($row = mysqli_fetch_assoc($query)) {
 foreach ($array_data as $row) {
     //echo 'qweq';
-    echo $row['created_at'];
+    //echo $row['created_at'];
     $super_admin =$_SESSION['is_super_admin'];
     $result = $row['msg'];
     $topic_id= $row['topic_id'];

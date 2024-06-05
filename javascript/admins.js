@@ -164,48 +164,50 @@ function desactivar(userId) {
     });
 }
 
-function asignarTopics(userId, name) {
-    gestionarTopicsAdmin(userId, name);
+function asignarTopics(topicId,topicName) {
+    gestionarTopicsAdmin(topicId,topicName);
 }
-function gestionarTopicsAdmin(userId, name) {
+
+function gestionarTopicsAdmin(topicId,topicName) {
 
     // Realizar una petición AJAX para obtener los datos de los topics
     $.ajax({
-        url: 'php/user-topics.php?action=get-topics-data&user_id=' + userId,
+        url: 'php/user-topics.php?action=get-admin-assigned-topics&topic_id=' + topicId,
         type: 'GET',
         dataType: 'json',
         success: function (data) {
             // Construir el contenido HTML de los botones
             console.log(data);
-            var buttonsHtml = '<div class="swal2-content">';
-            data.forEach(function (topic) {
+            var usersHtml = '<div class="swal2-content">';
+            data.forEach(function (user) {
                 // Muestra una imagen y nombre de cada topic y en su derecha para eliminar o editar
-                buttonsHtml += '<div class="topic-row">';
-                buttonsHtml += topic.img;
-                buttonsHtml += '<p style="display: inline-block; width: 180px;">' + topic.name + '</p>';
+                usersHtml += '<div class="topic-row">';
+                usersHtml += '<img src="' + user.img + '" alt="' + user.fname + ' ' + user.lname + '" class="user-img" />';
+                usersHtml += '<p class="user-name">' + user.fname + ' ' + user.lname + '</p>';
                 // Toggle switch para cada topic
-                buttonsHtml += '<label class="switch">';
-                buttonsHtml += '<input type="checkbox" class="topic-toggle" data-id="' + topic.id + '" ' + (topic.user_id !== null ? 'checked' : '') + '>';
+                usersHtml += '<label class="switch">';
+                usersHtml += '<input type="checkbox" class="topic-toggle" data-id="' + user.user_id + '" ' + (user.topic_id !== null ? 'checked' : '') + '>';
 
-                buttonsHtml += '<span class="slider round"></span>';
-                buttonsHtml += '</label>';
-                buttonsHtml += '</div>'; // Cierra el div de topic-row
+                usersHtml += '<span class="slider round"></span>';
+                usersHtml += '</label>';
+                usersHtml += '</div>'; // Cierra el div de topic-row
             });
-            buttonsHtml += '</div>'; // Cierra el div de swal2-content
+            usersHtml += '</div>'; // Cierra el div de swal2-content
 
             // Mostrar la SweetAlert con los botones
             Swal.fire({
-                title: 'Gestionar Topics de ' + name,
-                html: buttonsHtml,
+                title: 'Gestionar Topics de ' + topicName,
+                html: usersHtml,
                 icon: 'info',
 
             }).then(function () {
-                gestionarAdministradores();
+                gestionarTopics();
             });
 
             // Agregar eventos change a los interruptores
             $('.topic-toggle').change(function () {
-                var topicId = $(this).data('id');
+                var userId = $(this).data('id');
+                
                 adminTopics(userId, topicId, this.checked);
             });
         },
@@ -233,7 +235,7 @@ function adminTopics(userId, topicId, checked) {
         // Por ejemplo, mostrar un mensaje de éxito
         Swal.fire('Modificacion exitosamente').then((result) => {
             // volver a cargar los datos de los topics
-            gestionarTopicsAdmin(userId);
+            gestionarTopicsAdmin(topicId);
         })
 
     }).fail(function (xhr, status, error) {
@@ -256,14 +258,14 @@ function gestionarTopics() {
         dataType: 'json',
         success: function (data) {
             // Construir el contenido HTML de los botones
-            var buttonsHtml = '<div class="swal2-content">';
+            var buttonsHtml = '<div class="swal2-content" >';
             data.forEach(function (topic) {
                 // Muestra una imagen y nombre de cada topic y en su derecha para eliminar o editar
                 buttonsHtml += '<div class="topic-row">';
                 buttonsHtml += topic.img;
 
                 buttonsHtml += '<p style="display: inline-block; width: 180px;">' + topic.name + '</p>';
-                buttonsHtml += '<button class="eliminar-btn" data-id="' + topic.id + '" style="background-color: #ff6961;">Eliminar</button> <button class="editar-btn" data-id="' + topic.id + '" style="background-color: #77dd77;">Editar</button>';
+                buttonsHtml += '<button class="eliminar-btn" data-id="' + topic.id + '" style="background-color: #ff6961;">Eliminar</button> <button class="editar-btn" data-id="' + topic.id + '" style="background-color: #77dd77;">Editar</button><button class="assign-btn" data-id="' + topic.id + '" data-name="' + topic.name + '" style="background-color: #3498db;">Asociar</button>';
                 buttonsHtml += '</div>'; // Esta línea cierra el div de topic-row
             });
             buttonsHtml += '</div>'; // Esta línea cierra el div de swal2-content
@@ -277,7 +279,11 @@ function gestionarTopics() {
                 html: buttonsHtml,
                 icon: 'info'
             });
-
+            $('.assign-btn').click(function () {
+                var topicId = $(this).data('id');
+                var topicName = $(this).data('name');
+                asignarTopics(topicId,topicName);
+            });
             // Agregar eventos clic a los botones de Eliminar
             $('.eliminar-btn').click(function () {
                 var topicId = $(this).data('id');

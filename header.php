@@ -23,8 +23,10 @@
   cambiarColorFondo(localStorage.getItem('nuevoColor'));
 }
 function cambiarColorFondo(color) {
-  // Cambia el color de fondo del body
-  document.body.style.backgroundColor = color;
+  document.addEventListener("DOMContentLoaded", function() {
+    // Cambia el color de fondo del body
+    document.body.style.backgroundColor = color;
+  });
 }
   </script>
   
