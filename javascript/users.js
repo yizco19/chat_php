@@ -386,7 +386,11 @@ $(document).ready(function() {
   $(document).on('click', '.topic', function (event) {
     var topicId = $(this).data('id'); // Obtener el data-id en lugar del id
     let searchTerm = searchBar.value;
-    let sortDirection = document.getElementById("sortSelect").value; // Obtener la dirección de ordenamiento
+    if(sortDirection = document.getElementById("sortSelect").value){
+      sortDirection = document.getElementById("sortSelect").value;
+
+    }else{sortDirection = 'asc';} // Obtener la dirección de ordenamiento)
+    
     if (searchTerm != "") {
       searchBar.classList.add("active");
     } else {
@@ -477,6 +481,7 @@ document.getElementById('settings').addEventListener('click', function() {
       const orderByDateSwitch = document.getElementById('orderByDateSwitch');
       const hideUserNotMessage = document.getElementById('hideUserNotMessage');
       const showUserOnlyTopic = document.getElementById('showUserOnlyTopic');
+      const sortSelect = document.getElementById('sortSelect');
 
       if (nameSwitch.checked) {
         const firstName = document.getElementById('firstName').value;
@@ -498,13 +503,13 @@ document.getElementById('settings').addEventListener('click', function() {
         const sortDirection = document.getElementById('sortSelect').value;
         localStorage.setItem('orderByDate', sortDirection);
       }else{
-        sortDirection ='asc';
+        const sortDirection ='asc';
       }
       
       localStorage.setItem('hideUserNotMessage', hideUserNotMessage.checked);
       localStorage.setItem('showUserOnlyTopic', showUserOnlyTopic.checked);
 
-      realizarBusqueda(sortDirection, hideUserNotMessage.checked, showUserOnlyTopic.checked);
+      realizarBusqueda(sortSelect.value, hideUserNotMessage.checked, showUserOnlyTopic.checked);
 
       // Cerrar la ventana
       Swal.close();

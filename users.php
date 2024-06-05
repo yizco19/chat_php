@@ -464,17 +464,7 @@
                 </style>
               <?php endif; ?>
 
-              <div class="container mt-5">
-                <div class="form-group col">
-                  <label for="sortSelect">Ordenar por fecha:</label>
-                  <div class="col-sm-10">
-                    <select id="sortSelect" class="form-control">
-                      <option value="asc">Ascendente</option>
-                      <option value="desc">Descendente</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+            
             </div>
           </div>
         </div>

@@ -156,5 +156,5 @@ function iniciarChat(topicId, adminId) {
     // Aquí puedes agregar el código para iniciar el chat con el topic y el administrador seleccionados
     //console.log('Iniciar chat con Topic ID:', topicId, 'y Admin ID:', adminId);
     //Swal.fire('Chat iniciado', `Chat iniciado con el Topic ID: ${topicId} y Admin ID: ${adminId}`, 'success');
-    location.href = 'chat.php?topic_id=' + topicId + '&admin_id=' + adminId;
+    location.href = 'chat.php?topic_id=' + topicId + '&user_id=' + adminId;
 }
