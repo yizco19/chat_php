@@ -31,7 +31,7 @@ function connect() {
             // Si la imagen comienza con 'letra/', la dividimos y mostramos como un círculo con la letra y color
             $cadena = substr($topic['img'], 6); // Corta la parte "letra/" y toma el resto
             $subarray = explode("/", $cadena);
-            $topic['img'] = '<div class="circulo" style="cursor: pointer; height: 40px; width: 40px; background: ' . $subarray[1] . '"><span class="letra">' . $subarray[0] . '</span></div>';
+            $topic['img'] = '<div class="circulo notranslate" style="cursor: pointer; height: 40px; width: 40px; background: ' . $subarray[1] . '"><span class="letra">' . $subarray[0] . '</span></div>';
         } else {
             // De lo contrario, mostramos la imagen como una imagen simple
             $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 40px; width: 40px;" /> ';

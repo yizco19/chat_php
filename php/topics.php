@@ -13,6 +13,16 @@
             $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $topics;
         }
+        function getAllTopicsWithAdmin()
+        {
+            $conn = connect();
+            $stmt = $conn->query("SELECT t.*
+            FROM topic t
+            JOIN user_topics ut ON t.id = ut.topic_id
+GROUP BY t.id, t.name;");
+            $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $topics;
+        }
 
         function getContactList()
         {
@@ -118,6 +128,25 @@
 
                 echo json_encode($topics);
                 break;
+                case 'get_all_with_admin':
+                    $topics = getAllTopicsWithAdmin();
+                    foreach ($topics as $key => &$topic) {
+                        if (strpos($topic['img'], 'php/') === 0) {
+                            // Si la imagen comienza con 'php/', la mostramos como una imagen simple
+                            $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
+                        } else if (strpos($topic['img'], 'letra/') === 0) {
+                            // Si la imagen comienza con 'letra/', la dividimos y mostramos como un círculo con la letra y color
+                            $cadena = substr($topic['img'], 6); // Corta la parte "letra/" y toma el resto
+                            $subarray = explode("/", $cadena);
+                            $topic['img'] = '<div class="circulo" style="cursor: pointer; height: 64px; width: 64px; background: ' . $subarray[1] . '"><span class="letra">' . $subarray[0] . '</span></div>';
+                        } else {
+                            // De lo contrario, mostramos la imagen como una imagen simple
+                            $topic['img'] = '<img src="' . $topic['img'] . '" alt="' . $topic['name'] . '" class="topic-img" style="cursor: pointer; height: 64px; width: 64px;" /> ';
+                        }
+                    }
+    
+                    echo json_encode($topics);
+                    break;
             case 'get':
                 $id = isset($_GET['id']) ? $_GET['id'] : '';
                 if ($id) {

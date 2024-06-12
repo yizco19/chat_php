@@ -24,7 +24,7 @@
         
     }
 
-    $sql_search = "(fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%')";
+    $sql_search = "(CONCAT(fname, ' ', lname) LIKE '%{$searchTerm}%')";
     $sql = "SELECT * FROM users WHERE NOT unique_id = {$unique_id} AND {$sql_search} ORDER BY user_id DESC";
 
     $output = "";

@@ -12,9 +12,10 @@ require_once "php/functions.php";
 
 <body>
   
+<!--
 <div class="gtranslate_wrapper"></div>
 <script>window.gtranslateSettings = {"default_language":"en","languages":["en","fr","de","it","es"],"wrapper_selector":".gtranslate_wrapper","horizontal_position":"right","vertical_position":"top"}</script>
-<script src="https://cdn.gtranslate.net/widgets/latest/popup.js" defer></script>
+<script src="https://cdn.gtranslate.net/widgets/latest/popup.js" defer></script>-->
   <div class="wrapper">
     <section class="chat-area">
       <header style="  display: flex;
@@ -36,7 +37,7 @@ require_once "php/functions.php";
         }
         ?>
         <div style="display: flex; align-items: center;">
-          <a href="users.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
+          <a href="users.php" class="back-icon" style="margin-right: 5px;"><i class="fas fa-arrow-left"></i></a>
           <!-- Escapar el atributo alt con htmlspecialchars para evitar XSS -->
           <?php if($topic_id != null && $topic_id != ""): ?>
             <?php echo getImgById($topic_id); ?>
@@ -71,24 +72,24 @@ require_once "php/functions.php";
         <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
         <input type="text" class="topic_id" name="topic_id" value="<?php echo $topic_id; ?>" hidden>
         <input type="text" name="message" class="input-field" placeholder="Escribe tu mensaje aquí..." autocomplete="off">
-        <button class="send-btn"><i class="fab fa-telegram-plane"></i></button>
+        <button class="send-btn" style="background-color: green;"><i class="fab fa-telegram-plane"></i></button>
         <!-- Campo de entrada de archivo -->
         <input type="file" class="attachment" id="attachment" name="attachment" style="display: none;">
         <!-- Botón para seleccionar archivo -->
-        <button class="adjuntarBtn active"><i class="fas fa-paperclip"></i></button>
+        <button class="adjuntarBtn active" style="background-color: gray;"><i class="fas fa-paperclip"></i></button>
         <!-- Contenedor para mostrar el nombre del archivo seleccionado -->
         <div id="file-info" style="display: none;">
 
           <button type="button" class="cancelarBtn active" onclick="cancelarArchivo()"><i class="fas fa-times"></i></button>
         </div>
-        <button type="button" class="videollamadaBtn active" style="background-color: red"><i class="fas fa-video"></i></button>
+        <button type="button" class="videollamadaBtn active" style="background-color: blue"><i class="fas fa-video"></i></button>
         <input type="submit" value="Enviar" style="display: none;">
       </form>
 
     </section>
   </div>
 
-  <script src="javascript/chat.js"></script>
+  <script src="javascript/chat.js" type="module"></script>
 </body>
 
 </html>

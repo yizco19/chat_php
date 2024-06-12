@@ -249,7 +249,11 @@ function adminTopics(userId, topicId, checked) {
         });
     });
 }
-
+export const gestionarTopicsbtn = document.getElementById('gestionarTopics');
+gestionarTopicsbtn.addEventListener('click', function () {
+    gestionarTopics();
+})
+import { createCancelButtonHtml } from './script.js';
 function gestionarTopics() {
     // Realizar una petición AJAX para obtener los datos de los topics
     $.ajax({
@@ -258,26 +262,29 @@ function gestionarTopics() {
         dataType: 'json',
         success: function (data) {
             // Construir el contenido HTML de los botones
-            var buttonsHtml = '<div class="swal2-content" >';
+            var topicsHtml = createCancelButtonHtml();
+            topicsHtml += '<div class="swal2-title" style="text-align: center; font-size: 20px; font-weight: bold;">Gestionar Topics</div>';
+             topicsHtml += '<div class="swal2-content">';
+             topicsHtml += '<div class="swal2-content" >';
             data.forEach(function (topic) {
                 // Muestra una imagen y nombre de cada topic y en su derecha para eliminar o editar
-                buttonsHtml += '<div class="topic-row">';
-                buttonsHtml += topic.img;
+                topicsHtml += '<div class="topic-row">';
+                topicsHtml += topic.img;
 
-                buttonsHtml += '<p style="display: inline-block; width: 180px;">' + topic.name + '</p>';
-                buttonsHtml += '<button class="eliminar-btn" data-id="' + topic.id + '" style="background-color: #ff6961;">Eliminar</button> <button class="editar-btn" data-id="' + topic.id + '" style="background-color: #77dd77;">Editar</button><button class="assign-btn" data-id="' + topic.id + '" data-name="' + topic.name + '" style="background-color: #3498db;">Asociar</button>';
-                buttonsHtml += '</div>'; // Esta línea cierra el div de topic-row
+                topicsHtml += '<p style="display: inline-block; width: 180px;">' + topic.name + '</p>';
+                topicsHtml += '<button class="eliminar-btn" data-id="' + topic.id + '" style="background-color: #ff6961;">Eliminar</button> <button class="editar-btn" data-id="' + topic.id + '" style="background-color: #77dd77;">Editar</button><button class="assign-btn" data-id="' + topic.id + '" data-name="' + topic.name + '" style="background-color: #3498db;">Asociar</button>';
+                topicsHtml += '</div>'; // Esta línea cierra el div de topic-row
             });
-            buttonsHtml += '</div>'; // Esta línea cierra el div de swal2-content
+            topicsHtml += '</div>'; // Esta línea cierra el div de swal2-content
 
             // Agregar el botón para agregar un nuevo topic
-            buttonsHtml += '<button class="agregar-btn" style="background-color: #4CAF50; color: white; padding: 10px 20px; margin-top: 20px;">Agregar Nuevo Topic</button>';
+            topicsHtml += '<button class="agregar-btn" style="background-color: #4CAF50; color: white; padding: 10px 20px; margin-top: 20px;">Agregar Nuevo Topic</button>';
 
             // Mostrar la SweetAlert con los botones
             Swal.fire({
-                title: 'Gestionar Topics',
-                html: buttonsHtml,
-                icon: 'info'
+                html: topicsHtml,
+                showConfirmButton: false    
+
             });
             $('.assign-btn').click(function () {
                 var topicId = $(this).data('id');
@@ -290,6 +297,9 @@ function gestionarTopics() {
 
                 eliminar(topicId);
             });
+            $('#cancelButton').click(function () {
+                Swal.close();
+            })
 
             // Agregar eventos clic a los botones de Editar
             $('.editar-btn').click(function () {

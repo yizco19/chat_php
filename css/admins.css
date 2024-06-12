@@ -40,8 +40,8 @@
   display: grid;
   grid-gap: 5px; /* Espacio entre filas */
   grid-template-columns: 3fr;
-  align-items: start; /* Alinea los botones a la parte superior del contenedor */
-  justify-items: start; /* Alinea los botones a la izquierda del contenedor */
+  align-items: center; /* Alinea los botones a la parte superior del contenedor */
+  justify-content: space-between;
   margin-bottom: 10px; /* Espacio entre los contenedores de botones */
 }
 

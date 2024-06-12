@@ -164,6 +164,7 @@ if ($query) {
                                  ' . $message ;
                                  
           } else {
+
               $output .= '<div class="chat incoming">
 
                               <img src="' . $row['img'] . '" alt="" class="profile-image">
@@ -176,12 +177,20 @@ if ($query) {
                   $output .= '<a href="php/images/' . $adjunto . '" download="' . $adjunto . '"><img class="imagenFile" src="php/images/' . $adjunto . '" alt="'.$adjunto.'"></a>';
 
               } else {
-                  $output .= '<a href="php/images/' . $adjunto . '" download="' . $adjunto . '">' . $adjunto . '</a>';
+                  $output .= '<a href="php/images/' . $adjunto . '" download="' . $adjunto . '">' . $adjunto . '</a>
+                                            ';
 
               }
+
           }
 
+
           $output .= '</div>';
+          if($row['outgoing_msg_id'] !== $outgoing_id) {
+            $sender_at = $row['created_at'];
+            $sender_time = date('H:i', strtotime($sender_at));
+            $output .= '<div class="is-sender" style="margin-right:10px; display: flex;">' . $sender_time . '</div>';  
+            }
 
           $output .= '</div>';    
       }

@@ -13,8 +13,36 @@
   width: 150px;
   height: 150px;
   transform: translate(35%, -135%);
-  background-color
+  background-color : #fff;
 }
+.swal2-title{
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.btn-upload {
+  vertical-align: middle;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  padding: .375rem .75rem;
+  border-radius: .25rem;
+}
+
+.btn-upload:hover {
+  background-color: #45a049;
+}
+
+#preview img {
+  width: 200px; /* Ajusta este valor según tus necesidades */
+}
+
+
 .wrapper .chat-area{
   margin: auto;
 }
@@ -346,7 +374,7 @@ body{
 }
 .chat-box .incoming{
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 .chat-box .incoming .profile-image{
   margin-bottom: auto;
@@ -354,7 +382,6 @@ body{
   width: 35px;
 }
 .chat-box .incoming .details{
-  margin-right: auto;
   margin-left: 10px;
   max-width: calc(100% - 130px);
 }
@@ -460,6 +487,7 @@ body{
   .users header .logout{
     padding: 6px 10px;
     font-size: 16px;
+    width: 36px;
   }
   :is(.users, .users-list) .content .details{
     margin-left: 15px;
@@ -513,6 +541,7 @@ body{
   }
   .wrapper{
     width: 100%;
+    height: 100%;
     border-radius: 0px;
 
   }

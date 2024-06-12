@@ -344,7 +344,7 @@
 
   }
   #profile-image{
-    width: 80px;
+    width: 60px;
   }
 </style>
 <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
@@ -382,12 +382,6 @@
           }
           ?>
           <img src="<?php echo $row['img']; ?>" alt="" id="profile-image">
-          <script>
-            const profileImage = document.getElementById('profile-image');
-            profileImage.addEventListener('click', function() {
-              cambiarImagen();
-            });
-          </script>
 
           <div class="details">
             <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
@@ -418,8 +412,8 @@
 
           <?php if (isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] == 1) : ?>
           <button class="style-options-btn">
-            <img src="resource/red.png" alt="admins" id="gestionarTopics" onclick="gestionarTopics()"  class="opcion-img" style="border-radius:0%;">
-            <script src="javascript/admins.js"></script>
+            <img src="resource/red.png" alt="admins" id="gestionarTopics"   class="opcion-img" style="border-radius:0%;">
+            <script src="javascript/admins.js" type="module"></script>
             <link rel="stylesheet" type="text/css" href="css/admins.css">
 
             </button>
@@ -483,7 +477,7 @@
     </section>
   </div>
 
-  <script src="javascript/users.js"></script>
+  <script  src="javascript/users.js"  type="module" ></script>
   <?php include_once "footer.php"; ?>
 </body>
 

@@ -49,7 +49,7 @@ document.getElementById('add-user-topic').addEventListener('click', function() {
 function gestionarTopics() {
     // Realizar una petición AJAX para obtener los datos de los topics
     $.ajax({
-        url: 'php/topics.php?action=get_all',
+        url: 'php/topics.php?action=get_all_with_admin',
         type: 'GET',
         dataType: 'json',
         success: function(data) {

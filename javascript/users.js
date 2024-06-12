@@ -1,6 +1,8 @@
-  const searchBar = document.querySelector("#searchInput"),
-  searchIcon = document.querySelector("#search-button");
-  usersList = document.querySelector(".users-list");
+// users.js
+export const searchBar = document.querySelector("#searchInput");
+export const searchIcon = document.querySelector("#search-button");
+export const usersList = document.querySelector(".users-list");
+
 
   searchIcon.onclick = ()=>{
     searchBar.classList.toggle("show");
@@ -18,10 +20,12 @@ searchBar.onkeyup = ()=>{
 }
 
 
-function   realizarBusqueda(sortDirection, hideUserNotMessage, showUserOnlyTopic){
+function   realizarBusqueda(sortDirection, hideUserNotMessage, showUserOnlyTopic,topicId) {
+
   //comprueba el parametro esta definido
   if (typeof sortDirection === 'undefined') {
-    sortDirection = localStorage.getItem('sortDirection') || 'asc';
+    sortDirection = localStorage.getItem('orderByDate') || 'asc';
+    console.log(sortDirection);
   }
   if (typeof hideUserNotMessage === 'undefined') {
     hideUserNotMessage = localStorage.getItem('hideUserNotMessage') || 'false';
@@ -29,7 +33,9 @@ function   realizarBusqueda(sortDirection, hideUserNotMessage, showUserOnlyTopic
   if (typeof showUserOnlyTopic === 'undefined') {
     showUserOnlyTopic = localStorage.getItem('showUserOnlyTopic') || 'false';
   }
-
+  if (typeof topicId === 'undefined') {
+    topicId =  '0';
+  }
   const searchTerm = searchBar.value;
   searchBar.classList.toggle("active", searchTerm !== "");
   const xhr = new XMLHttpRequest();
@@ -39,9 +45,9 @@ function   realizarBusqueda(sortDirection, hideUserNotMessage, showUserOnlyTopic
       usersList.innerHTML = xhr.response;
     }
   };
-  console.log(sortDirection, hideUserNotMessage, showUserOnlyTopic,searchTerm);
+
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send(`searchTerm=${searchTerm}&filterUserNotMessage=${hideUserNotMessage}&sortDirection=${sortDirection}&showUserOnlyTopic=${showUserOnlyTopic}`);
+  xhr.send(`searchTerm=${searchTerm}&filterUserNotMessage=${hideUserNotMessage}&sortDirection=${sortDirection}&showUserOnlyTopic=${showUserOnlyTopic}&topic_id=${topicId}`);
 }
 
 
@@ -63,22 +69,9 @@ function   realizarBusqueda(sortDirection, hideUserNotMessage, showUserOnlyTopic
 
 
 
-getUsers();
+realizarBusqueda();
 
 
-
-function getUsers() {
-  let xhr = new XMLHttpRequest();
-  const filterCheckbox = document.getElementById('filterCheckboxInput');
-  
-  xhr.open("GET", `php/users.php?filterUserNotMessage=${filterCheckbox.checked}`, true);
-  xhr.onload = () => {
-    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200 && !searchBar.classList.contains("active")) {
-      usersList.innerHTML = xhr.response;
-    }
-  };
-  xhr.send();
-}
 
 
 // Función para mostrar el cuadro de diálogo de SweetAlert con el correo electrónico actual
@@ -201,26 +194,75 @@ function cambiarNombre() {
       console.error(error);
     });
 }
+import { createCancelButtonHtml } from "./script.js";
 
-
-function cambiarImagen() {
-  const profileImage = document.getElementById('profile-image');
-  var imageUrl = profileImage.src;
-  Swal.fire({
-    imageUrl: imageUrl,
-    title: 'Cambiar Imagen de Perfil',
-    html: '<input type="file" id="profile-image-input" accept="image/*" >',
-    showCancelButton: true,
-    confirmButtonText: 'Guardar',
-    cancelButtonText: 'Cancelar',
-    preConfirm: () => {
+      // Función para cambiar la imagen de perfil utilizando SweetAlert.
+      function cambiarImagen() {
+        const profileImage = document.getElementById('profile-image');
+        var imageUrl = profileImage.src;
+        var imageHtml = createCancelButtonHtml();
+        
+        imageHtml += "<div class='swal2-title'>Cambiar avatar</div>";
+        imageHtml += `
+            <img id="swal-profile-image" src="${imageUrl}" alt="Imagen de Perfil" style="max-width: 100%; max-height: 300px;">
+            <div class="file-upload-wrapper" style="margin-top: 40px;">
+                <button type="button" id="guardarImagen" class="btn btn-primary" >Guardar</button>
+                <button type="button" class="btn-upload">Subir archivo</button>
+                <input type="file" id="profile-image-input" accept="image/*" style="display: none;"/>
+            </div>
+           
+        `;
+    
+        Swal.fire({
+            html: imageHtml,
+            showConfirmButton: false,
+            didOpen: () => {
+                // Activar el input de archivo cuando se hace clic en el botón de subida personalizado dentro de SweetAlert.
+                document.querySelector('.swal2-popup .btn-upload').addEventListener('click', function() {
+                    document.getElementById('profile-image-input').click();
+                });
+    
+                // Mostrar vista previa de la imagen seleccionada dentro de SweetAlert.
+                document.getElementById('profile-image-input').addEventListener('change', function(event) {
+                    var file = event.target.files[0];
+                    var reader = new FileReader();
+    
+                    reader.onload = (e) => {
+                        document.getElementById('swal-profile-image').src = e.target.result;
+                    };
+    
+                    reader.readAsDataURL(file);
+                });
+    
+                // Manejar el evento del botón de cancelar.
+                document.getElementById('cancelButton').addEventListener('click', function() {
+                    Swal.close();
+                });
+    
+                // Manejar el evento del botón de guardar.
+                document.getElementById('guardarImagen').addEventListener('click', function() {
+                    const file = document.getElementById('profile-image-input').files[0];
+                    if (file) {
+                        editarImagen(file);
+                        Swal.fire('¡Imagen de perfil actualizada!', 'Has seleccionado una nueva imagen.', 'success').then(() => {
+                            // Actualizar la imagen de perfil sin recargar toda la página.
+                            profileImage.src = URL.createObjectURL(file);
+                        });
+                    }
+                });
+            },
+            preConfirm: () => {
+                // Obtener el archivo subido para procesarlo.
+                return document.getElementById('profile-image-input').files[0];
+            }
+        });
     }
-}).then((result) => {
-       if(result.isConfirmed){
-        editarImagen(document.getElementById('profile-image-input').files[0]);
-        Swal.fire('¡Imagen de perfil actualizada!', `Has seleccionado una nueva imagen.`, 'success');
-      }
-});
+    
+function updateFileName(inputElement) {
+  inputElement.setCustomValidity('');
+  if (!inputElement.value) {
+    inputElement.setCustomValidity(' ');
+  }
 }
 function cambiarEmail() {
   // Obtener los detalles del usuario
@@ -383,41 +425,24 @@ function editarImagen(nuevaImagen) {
 }
 
 $(document).ready(function() {
-  $(document).on('click', '.topic', function (event) {
-    var topicId = $(this).data('id'); // Obtener el data-id en lugar del id
-    let searchTerm = searchBar.value;
-    if(sortDirection = document.getElementById("sortSelect").value){
-      sortDirection = document.getElementById("sortSelect").value;
+  // Manejar el evento de clic simple
+  $(document).on('click', '.topic', function(event) {
+    var topicId = $(this).data('id'); // Obtener el data-id
+    realizarBusqueda(null, null, null, topicId);
+  });
 
-    }else{sortDirection = 'asc';} // Obtener la dirección de ordenamiento)
-    
-    if (searchTerm != "") {
-      searchBar.classList.add("active");
-    } else {
-      searchBar.classList.remove("active");
-    }
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "php/search.php", true);
-    xhr.onload = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          let data = xhr.response;
-          usersList.innerHTML = data;
-        }
-      }
-    };
-  
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    const filterCheckbox = document.getElementById('filterCheckboxInput'); // Obtener el elemento del checkbox
-    xhr.send("searchTerm=" + searchTerm + "&filterUserNotMessage=" + filterCheckbox.checked + "&sortDirection=" + sortDirection +"&topic_id=" +topicId + "&showUserOnly=0" );
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
+  // Manejar el evento de doble clic
+  $(document).on('dblclick', '.topic', function(event) {
+    realizarBusqueda();
   });
 });
-function generarSwitch(id, label) {
+
+function generarSwitch(id, label, checked) {
   //comprueba si en localStorage hay un valor para el switch
-  var checked = localStorage.getItem(id) === "true" ? "checked" : "";
+  if(checked == undefined || checked == null){
+    var checked = localStorage.getItem(id) === "true" ? "checked" : "";
+  }
+  
   return `
     <div style="display: flex; align-items: center;">
       <label class="switch" style="margin-right: 10px;">
@@ -431,37 +456,58 @@ function generarSwitch(id, label) {
 
 
 document.getElementById('settings').addEventListener('click', function() {
-  var style_cancel_button = "cursor: pointer; width: 28px; height: 28px;";
+  getDetailUser().then((userData) => {
+      showOptions(userData);
+  }).catch((error) => {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: error
+    }).then(() => {
+      window.location.reload();
+      console.error(error);
+    })
+  })
+
+});
+function showOptions(userData) {
+  var fnameActual = userData.fname;
+  var lnameActual = userData.lname;
+  var emailActual = userData.email;
+  var style_box_agenda = "display: flex; flex-direction: column; align-items: center; margin: 10px; border: 6px solid gray; border-radius: 20px; padding: 10px;";
   if(localStorage.getItem('nuevoColor')) {
     var color = localStorage.getItem('nuevoColor');
+    var checkedColor = "checked";
+  }else {
+    var checkedColor = "";
   }
+  if(localStorage.getItem('orderByDate')){
+    var currentValue = localStorage.getItem('orderByDate');
+    var checkedOrderByDate = "checked";
+  }else {
+    var checkedOrderByDate = "";
+    var currentValue = "asc";
+  }
+// Estilo CSS para los inputs
+var text_input_style = 'style="max-width: 150px; padding: 0 .75em; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px;" ';
+
   // Mostrar la ventana de configuración
   const settingshtml = `
-    <div style="display: flex; flex-direction: column; align-items: flex-end;">
-      <img src="resource/marca-x.png" alt="Cancel" class="option-img" id="cancelButton" style="${style_cancel_button}">
+  ${createCancelButtonHtml()}
+    ${generarSwitch('nameSwitch', 'Nombre y apellidos','checked')}
+    <div style="display: flex; justify-content: center;">
+      <input type="text"  id="firstName" value="${fnameActual}" ${text_input_style} >
+      <input type="text"  id="lastName" value="${lnameActual}"  ${text_input_style}>
     </div>
-    ${generarSwitch('nameSwitch', 'Nombre y apellidos')}
-    <div style="display: flex; align-items: center;">
-      <input type="text" class="swal2-input" id="firstName" placeholder="Nombre" style="margin-right: 1px; width: 180px;">
-      <input type="text" class="swal2-input" id="lastName" placeholder="Apellido" style="width: 180px;">
-    </div>
-    ${generarSwitch('emailSwitch', 'Correo actual')}
+    ${generarSwitch('emailSwitch', 'Correo actual','checked')}
     <div>
-      <input type="text" id="email" class="swal2-input" placeholder="Correo">
+      <input type="text" id="email" class="swal2-input" value="${emailActual}" style="    width: auto; height:auto; ">
     </div>
-    ${generarSwitch('colorSwitch', 'Color')}
+    ${generarSwitch('colorSwitch', 'Color',checkedColor)}
     <div>
       <input type="color" id="color" placeholder="Color" value="${color}">
     </div>
-    ${generarSwitch('orderByDateSwitch', 'Ordenar por fecha')}
-    <div>
-      <div class="col-sm-10">
-        <select id="sortSelect" class="form-control">
-          <option value="asc">Ascendente</option>
-          <option value="desc">Descendente</option>
-        </select>
-      </div>
-    </div>
+    ${generarOrderByDateSelectConValor(currentValue,checkedOrderByDate)}
     ${generarSwitch('hideUserNotMessage', 'Ocultar usuarios sin mensajes')}
     ${generarSwitch('showUserOnlyTopic', 'Mostrar solo usuarios con tema')}
   `;
@@ -486,12 +532,20 @@ document.getElementById('settings').addEventListener('click', function() {
       if (nameSwitch.checked) {
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
-        editarNombre(firstName, lastName);
+        //comprueba si el nombre es  igual al nombre actual
+        if (firstName !== fnameActual || lastName !== lnameActual) {
+          editarNombre(firstName, lastName);
+        }
+
       }
 
       if (emailSwitch.checked) {
         const email = document.getElementById('email').value;
-        editarEmail(email);
+        //comprueba si el email es valido y igual al email actual
+        if (validarEmail(email) && email !== emailActual) {
+          editarEmail(email);
+        }
+
       }
 
       if (colorSwitch.checked) {
@@ -510,7 +564,8 @@ document.getElementById('settings').addEventListener('click', function() {
       localStorage.setItem('showUserOnlyTopic', showUserOnlyTopic.checked);
 
       realizarBusqueda(sortSelect.value, hideUserNotMessage.checked, showUserOnlyTopic.checked);
-
+      //reload
+      location.reload();
       // Cerrar la ventana
       Swal.close();
     }
@@ -519,4 +574,26 @@ document.getElementById('settings').addEventListener('click', function() {
   document.getElementById('cancelButton').addEventListener('click', function() {
     Swal.close();
   });
+}
+function validarEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+function generarOrderByDateSelectConValor(currentValue,checkedOrderByDate) {
+  console.log(currentValue,checkedOrderByDate);
+  return `
+  ${generarSwitch('orderByDateSwitch', 'Ordenar por fecha',checkedOrderByDate)}
+  <div>
+    <div class="col-sm-10">
+    <select id="sortSelect" class="form-control">
+    <option value="asc" ${currentValue === 'asc' ? 'selected' : ''}>Ascendente</option>
+    <option value="desc" ${currentValue === 'desc' ? 'selected' : ''}>Descendente</option>
+</select>
+    </div>
+  </div>
+  `;
+}
+export const profileImage = document.getElementById('profile-image');
+profileImage.addEventListener('click', function() {
+  cambiarImagen();
 });

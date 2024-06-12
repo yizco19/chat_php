@@ -13,10 +13,11 @@ const videoLlamadaBtn = document.querySelector('.videollamadaBtn');
 form.onsubmit = (e) => {
   e.preventDefault();
 }
-sendBtn.classList.add("active");
+
 inputField.focus();
 inputField.onkeyup = () => {
   if (inputField.value != "") {
+
     sendBtn.classList.add("active");
   } else {
     sendBtn.classList.remove("active");
@@ -171,21 +172,32 @@ function cancelarArchivo() {
 
 // Ejecutar la función showFileName cuando se cambie el archivo seleccionado
 document.getElementById('attachment').addEventListener('change', showFileName);
+import { createCancelButtonHtml } from "./script.js";
 
 document.getElementById('profile-image').addEventListener('click', function () {
-  var imageUrl = this.src;
+    var imageUrl = this.src;
 
-  Swal.fire({
-    imageUrl: imageUrl,
-    imageHeight: '300px',
-    imageWidth: 'auto',
-    confirmButtonText: 'Cerrar'
-  });
+    // Construir el contenido HTML de los botones
+    var topicsHtml = createCancelButtonHtml();
+    topicsHtml += '<img id="swal-profile-image" src="' + imageUrl + '" alt="Imagen de Perfil" style="max-width: 100%; max-height: 300px;">';
+    // Continúa con el resto de tu lógica para construir topicsHtml
+
+    Swal.fire({
+      
+        html: topicsHtml,
+        showConfirmButton: false,
+        autoSize: true 
+    });
+    document.getElementById('cancelButton').addEventListener('click', function() {
+      Swal.close();
+    });
 });
+
 showImageMessage();
 
 videoLlamadaBtn.addEventListener('click', function () {
   var codigoUsuario = "1234567890";
+  
   getDetailUser()
     .then(userData => {
       // Obtener el nombre y apellido actual del usuario
@@ -195,8 +207,6 @@ videoLlamadaBtn.addEventListener('click', function () {
       console.log("Apellido actual:", apellidoActual);
       codigoUsuario = nombreActual + apellidoActual;
       console.log("Codigo de Usuario actualizado:", codigoUsuario);
-
-      console.log("Codigo de Usuario fuera actualizado:", codigoUsuario);
 
       var fechaHoraActual = new Date();
 
@@ -216,27 +226,48 @@ videoLlamadaBtn.addEventListener('click', function () {
       var fechaHoraFormateada = "" + anio + mes + dia + horas + minutos + segundos;
 
       var enlaceVideollamada = "https://meet.jit.si/" + codigoUsuario + fechaHoraFormateada;
+      
+      var videoLlamadaHtml = createCancelButtonHtml();
+      videoLlamadaHtml += '<img id="swal-video-image" src="resource/videorecibido.png" alt="Video de Llamada" style="max-width: 200px; margin:40px">';
+      //dos btn una para enviar y otro para abrir enlace a pacman con una imagen
+      videoLlamadaHtml += '<div style="display: flex; justify-content: center;    align-items: center;">';
+      videoLlamadaHtml += '<button id="enviarBtn" class="btn btn-primary" style="margin-right: 20px; font-size: 20px">';
+      videoLlamadaHtml += 'Enviar';
+      videoLlamadaHtml += '</button>';
+
+      videoLlamadaHtml += '<div style="width: 200px;">      ¿te has adelantado a la reunión?';
+      videoLlamadaHtml += '<button id="jugarPacman" style="background: none; border: none; cursor: pointer;">';
+      videoLlamadaHtml += '<img src="resource/Pac-Man-Logo.png" alt="Jugar Pacman" style="max-width: 200px; " />';
+      videoLlamadaHtml += '</button>';
+      videoLlamadaHtml += '</div>';
+      videoLlamadaHtml += '</div>';
+
       Swal.fire({
-        title: "Enlace de videollamada",
-        imageHeight: '300px',
-        imageWidth: 'auto',
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Enviar enlace de videollamada"
+        html: videoLlamadaHtml,
+        showConfirmButton: false
       }).then((result) => {
-        if (result.isConfirmed) {
-          enviarVideoLlamada(enlaceVideollamada);
-        }
-      })
+        
+      });
+
+      document.getElementById('cancelButton').addEventListener('click', function() {
+        Swal.close();
+      });
+
+      document.getElementById('enviarBtn').addEventListener('click', function() {
+        enviarVideoLlamada(enlaceVideollamada);
+      });
+
+      document.getElementById('jugarPacman').addEventListener('click', function() {
+        // abrir pestaña de Pacman
+        window.open("https://ciesoftware.com/juegos/pacman/", '_blank');
+      });
+
     })
     .catch(error => {
       // Manejar errores si ocurre un problema al obtener los detalles del usuario
       console.error(error);
     });
-
-})
-
+});
 
 function showImageMessage() {
   $(document).ready(function () {
@@ -346,7 +377,9 @@ document.getElementById("informactionUser").addEventListener("click", function (
     .then(response => response.json())
     .then(data => {
       if (data) {
-        let htmlContent = `<p><strong>Nombre:</strong> ${data.fname} ${data.lname}</p>
+        var htmlContent = createCancelButtonHtml();
+        htmlContent+='<div class="swal2-title" id="swal2-title" style="display: block;">Información del usuario</div>';
+         htmlContent += `<p><strong>Nombre:</strong> ${data.fname} ${data.lname}</p>
         <p><strong>Email:</strong> ${data.email}</p>`;
         if (data.localizacion !== null) {
           htmlContent += `<p><strong>Localización:</strong> ${data.localizacion}</p>`;
@@ -356,9 +389,13 @@ document.getElementById("informactionUser").addEventListener("click", function (
         }
         // Mostrar SweetAlert con la información del usuario
         Swal.fire({
-          title: 'Información del Usuario',
           html: htmlContent,
-          icon: 'info'
+          showCloseButton: false,
+          showConfirmButton: false
+
+        });
+        document.getElementById("cancelButton").addEventListener("click", function () {
+          Swal.close();
         });
       } else {
         Swal.fire({

@@ -49,14 +49,16 @@ require_once 'auth_config.php';
           <i class="fas fa-eye"></i>
         </div>
         <div class="field button">
-          <input type="submit" name="submit" value="Chatear">
+          <input type="submit" name="submit" value="Acceder">
         </div>
-        <input type="checkbox" name="rememberMe" id="rememberMe"> <label for="rememberMe">Recordar me</label>
+        <input type="checkbox" name="rememberMe" id="rememberMe"> <label for="rememberMe">Recuérdame</label>
       </form>
-      <div class="link">Aún no te has registrado? <a href="register.php">Regístrate acá</a></div>
+      <div class="link">Aún no te has registrado? <a href="register.php">Regístrate ahora!</a></div>
+      <!--
       <div class="google-login">
         <button class="btn-google"><i class="fab fa-google"></i> <a href="<?php echo $client->createAuthUrl(); ?>" style="color: white;">Iniciar Sesion con Google</a></button>
       </div>
+  -->
     </section>
 
   </div>

@@ -10,7 +10,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Chatcheap</title>
+  <title>CHAT CIE</title>
   <link rel="stylesheet" href="./style.css">
     <!-- Agrega SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
